@@ -1,0 +1,12 @@
+[project]
+name = "advanced-machine-learning-course-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiofiles>=25.1.0",
+    "aiohttp>=3.13.2",
+    "black>=25.11.0",
+    "mini-racer>=0.12.4",
+]

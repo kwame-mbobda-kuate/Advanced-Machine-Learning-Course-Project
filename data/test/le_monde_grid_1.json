@@ -1,0 +1,388 @@
+{
+    "data": {
+        "game": {
+            "id": "40e07aed-ae6c-43eb-9000-afaa9d586e27",
+            "__typename": "CrosswordGame",
+            "name": "Mots Croisés",
+            "slug": "mots-croises",
+            "author": "Philippe Dupuis",
+            "color": "#0053fa",
+            "grid": {
+                "id": "8b833676-7006-4e7f-a15d-50098d0c88f7",
+                "date": null,
+                "slug": "mots-croises/free-1",
+                "free": true,
+                "freeGridNumber": 1,
+                "userGrid": null,
+                "grid": {
+                    "dimensions": [
+                        12,
+                        10
+                    ],
+                    "definitions": [
+                        {
+                            "coords": [
+                                0,
+                                0
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Met veste et situation sens dessus dessous",
+                            "solution": "RETOURNEMENT"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                1
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Toucher les points sensibles",
+                            "solution": "EMOUVOIR"
+                        },
+                        {
+                            "coords": [
+                                9,
+                                1
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Liaison rapide",
+                            "solution": "RER"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                2
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Bertolt ou Brigitte",
+                            "solution": "BB"
+                        },
+                        {
+                            "coords": [
+                                5,
+                                2
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Attaquer à belles dents",
+                            "solution": "SCIER"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                3
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Nous entraîne dans un monde plein de complexes",
+                            "solution": "OEDIPIEN"
+                        },
+                        {
+                            "coords": [
+                                9,
+                                3
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Des lentilles pour le bétail",
+                            "solution": "ERS"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                4
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Un petit rôle en fond de scène",
+                            "solution": "UTILITE"
+                        },
+                        {
+                            "coords": [
+                                8,
+                                4
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Beaux parleurs emplumés",
+                            "solution": "ARAS"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                5
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Attaquée, balle au pied",
+                            "solution": "TACLEE"
+                        },
+                        {
+                            "coords": [
+                                7,
+                                5
+                            ],
+                            "orientation": "horizontal",
+                            "text": "L’argon",
+                            "solution": "AR"
+                        },
+                        {
+                            "coords": [
+                                10,
+                                5
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Possessif",
+                            "solution": "MA"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                6
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Hercule et ses descendants",
+                            "solution": "ESTE"
+                        },
+                        {
+                            "coords": [
+                                5,
+                                6
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Brutalités et mauvais coups",
+                            "solution": "SEVICES"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                7
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Bien fatigué",
+                            "solution": "USE"
+                        },
+                        {
+                            "coords": [
+                                6,
+                                7
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Leurs voies sont tracées, ils doivent les suivre",
+                            "solution": "TRAINS"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                8
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Verrai venir",
+                            "solution": "SENTIRAI"
+                        },
+                        {
+                            "coords": [
+                                9,
+                                8
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Cheville sportive",
+                            "solution": "TEE"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                9
+                            ],
+                            "orientation": "horizontal",
+                            "text": "Marquées d’une empreinte",
+                            "solution": "ESTAMPILLEES"
+                        },
+                        {
+                            "coords": [
+                                0,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Fait des réductions et remet en état",
+                            "solution": "REBOUTEUSE"
+                        },
+                        {
+                            "coords": [
+                                1,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Assommasses et empoisonnasses",
+                            "solution": "EMBETASSES"
+                        },
+                        {
+                            "coords": [
+                                2,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Dans tout",
+                            "solution": "TO"
+                        },
+                        {
+                            "coords": [
+                                2,
+                                3
+                            ],
+                            "orientation": "vertical",
+                            "text": "Imposent leurs choix",
+                            "solution": "DICTENT"
+                        },
+                        {
+                            "coords": [
+                                3,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Equipé pour faire du bon travail",
+                            "solution": "OUTILLE"
+                        },
+                        {
+                            "coords": [
+                                3,
+                                8
+                            ],
+                            "orientation": "vertical",
+                            "text": "Sur la table",
+                            "solution": "TA"
+                        },
+                        {
+                            "coords": [
+                                4,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Invisibles et dangereux",
+                            "solution": "UV"
+                        },
+                        {
+                            "coords": [
+                                4,
+                                3
+                            ],
+                            "orientation": "vertical",
+                            "text": "Jacasse à la campagne  et aussi en ville",
+                            "solution": "PIE"
+                        },
+                        {
+                            "coords": [
+                                4,
+                                7
+                            ],
+                            "orientation": "vertical",
+                            "text": "Passa à l’envers",
+                            "solution": "TIM"
+                        },
+                        {
+                            "coords": [
+                                5,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Prîtes des couleurs",
+                            "solution": "ROSITES"
+                        },
+                        {
+                            "coords": [
+                                5,
+                                8
+                            ],
+                            "orientation": "vertical",
+                            "text": "Morceau de parpaing",
+                            "solution": "RP"
+                        },
+                        {
+                            "coords": [
+                                6,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Ville de conciles",
+                            "solution": "NICEE"
+                        },
+                        {
+                            "coords": [
+                                6,
+                                6
+                            ],
+                            "orientation": "vertical",
+                            "text": "Support",
+                            "solution": "ETAI"
+                        },
+                        {
+                            "coords": [
+                                7,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "L’Irlande des poètes",
+                            "solution": "ERIN"
+                        },
+                        {
+                            "coords": [
+                                7,
+                                5
+                            ],
+                            "orientation": "vertical",
+                            "text": "Mieux vaut rester couvert durant ses trente jours",
+                            "solution": "AVRIL"
+                        },
+                        {
+                            "coords": [
+                                8,
+                                4
+                            ],
+                            "orientation": "vertical",
+                            "text": "Beau morceau pour la diva",
+                            "solution": "ARIA"
+                        },
+                        {
+                            "coords": [
+                                9,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Partir à l’aventure",
+                            "solution": "ERRER"
+                        },
+                        {
+                            "coords": [
+                                9,
+                                6
+                            ],
+                            "orientation": "vertical",
+                            "text": "Cœur de ville",
+                            "solution": "CITE"
+                        },
+                        {
+                            "coords": [
+                                10,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Négation",
+                            "solution": "NE"
+                        },
+                        {
+                            "coords": [
+                                10,
+                                3
+                            ],
+                            "orientation": "vertical",
+                            "text": "Reconduite à son point de départ",
+                            "solution": "RAMENEE"
+                        },
+                        {
+                            "coords": [
+                                11,
+                                0
+                            ],
+                            "orientation": "vertical",
+                            "text": "Organisasses en réseaux",
+                            "solution": "TRESSASSES"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
