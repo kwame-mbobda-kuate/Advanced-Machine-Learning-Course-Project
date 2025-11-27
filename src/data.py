@@ -56,3 +56,6 @@ class Grid:
         self.difficulty = difficulty
         self.grid_layout = grid_layout
         self.clue_answer_pairs = clue_answer_pairs
+
+class GridConversionError(Exception):
+    pass

@@ -1,0 +1,873 @@
+<?xml version="1.0" encoding="utf-8"?>
+<puzzle id="KFR-11496099" ipsrecipe="FIG_MF - 1 - 12x15" type="Arrowword" variation="Arrowword France" variationcode="awkfr" width="12" height="15" difficulty="1" created="2025-11-24T00:47:44" exported="2025-11-24T01:14:21" languagecode="fr" languagename="French">
+  <title />
+  <puzzleimage posx="0" posy="0" width="1417" height="1772" imagewidth="1417" imageheight="1772">
+  </puzzleimage>
+  <grid>
+    <cells>
+      <cell x="0" y="0" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrightdowntop" groupindex="2" wordindex="1" ispictorialclue="0">Désert</clue>
+        <clue arrow="arrowdownrightbottom" groupindex="1" wordindex="1" ispictorialclue="0">Qui empêche de glisser</clue>
+      </cell>
+      <cell x="1" y="0" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="0" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrightdowntop" groupindex="2" wordindex="2" ispictorialclue="0">Individu</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="7" ispictorialclue="0">Vidéo d'appren\tis\sage</clue>
+      </cell>
+      <cell x="3" y="0" visible="1" content="Z" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="0" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrightdowntop" groupindex="2" wordindex="3" ispictorialclue="0">Protecteur du doigt</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="8" ispictorialclue="0">Bien apporté en se mariant</clue>
+      </cell>
+      <cell x="5" y="0" visible="1" content="D" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="0" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrightdowntop" groupindex="2" wordindex="4" ispictorialclue="0">Il aime avoir mal</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="9" ispictorialclue="0">Habitudes réglées</clue>
+      </cell>
+      <cell x="7" y="0" visible="1" content="M" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="0" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrightdowntop" groupindex="2" wordindex="5" ispictorialclue="0">S'arrêtait d'un coup, pour un moteur</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="10" ispictorialclue="0">Périmètre</clue>
+      </cell>
+      <cell x="9" y="0" visible="1" content="C" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="0" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrightdowntop" groupindex="2" wordindex="6" ispictorialclue="0">Rayé</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="11" ispictorialclue="0">Nord-Est</clue>
+      </cell>
+      <cell x="11" y="0" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="1" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="1" y="1" visible="1" content="N" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="1" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="1" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="1" visible="1" content="D" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="1" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="1" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="1" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="1" visible="1" content="P" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="1" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="1" visible="1" content="N" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="1" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="2" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="2" ispictorialclue="0">Auteur des Misérables</clue>
+        <clue arrow="arrowdownrightbottom" groupindex="1" wordindex="4" ispictorialclue="0">Selle de bête de somme</clue>
+      </cell>
+      <cell x="1" y="2" visible="1" content="H" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="2" visible="1" content="U" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="2" visible="1" content="G" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="2" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="2" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="3" ispictorialclue="0">Se mettre à l'écart (S')</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="12" ispictorialclue="0">Bonne copine</clue>
+      </cell>
+      <cell x="6" y="2" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="2" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="2" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="2" visible="1" content="L" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="2" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="2" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="3" visible="1" content="B" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="1" y="3" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="3" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="3" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="5" ispictorialclue="0">Orna la peau d'un dessin</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="13" ispictorialclue="0">Certaines vaches</clue>
+      </cell>
+      <cell x="4" y="3" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="3" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="3" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="3" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="3" visible="1" content="U" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="3" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="3" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowdown" groupindex="2" wordindex="14" ispictorialclue="0">Boisson qui mousse</clue>
+      </cell>
+      <cell x="11" y="3" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="4" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="6" ispictorialclue="0">Récipient servant à boire</clue>
+        <clue arrow="arrowdownrightbottom" groupindex="1" wordindex="9" ispictorialclue="0">Animal paresseux</clue>
+      </cell>
+      <cell x="1" y="4" visible="1" content="B" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="4" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="4" visible="1" content="L" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="4" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="7" ispictorialclue="0">Personnel</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="15" ispictorialclue="0">Loch à monstre</clue>
+      </cell>
+      <cell x="5" y="4" visible="1" content="M" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="4" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="4" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="8" ispictorialclue="0">Comme le visage de Papy</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="16" ispictorialclue="0">Essuyés</clue>
+      </cell>
+      <cell x="8" y="4" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="4" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="4" visible="1" content="D" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="4" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="5" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="1" y="5" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="5" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="10" ispictorialclue="0">Liqueur du Midi</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="17" ispictorialclue="0">Balustrade dans un escalier</clue>
+      </cell>
+      <cell x="3" y="5" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="5" visible="1" content="N" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="5" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="5" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="5" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="5" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="5" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="5" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="5" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowdown" groupindex="2" wordindex="18" ispictorialclue="0">Digne de mépris</clue>
+      </cell>
+      <cell x="0" y="6" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="11" ispictorialclue="0">Mise en ordre</clue>
+        <clue arrow="arrowdownrightbottom" groupindex="1" wordindex="14" ispictorialclue="0">Bêtement heureux</clue>
+      </cell>
+      <cell x="1" y="6" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="6" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="6" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="6" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="6" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="6" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="12" ispictorialclue="0">Fleuve à Turin</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="19" ispictorialclue="0">Généreux</clue>
+      </cell>
+      <cell x="7" y="6" visible="1" content="P" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="6" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="6" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="13" ispictorialclue="0">Troisième note de musique</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="20" ispictorialclue="0">Couturier</clue>
+      </cell>
+      <cell x="10" y="6" visible="1" content="M" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="6" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="7" visible="1" content="B" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="1" y="7" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="7" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="7" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="7" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="7" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="15" ispictorialclue="0">Pré\pa\\ra\tion de char\cu\\te\rie</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="21" ispictorialclue="0">Hors de danger</clue>
+      </cell>
+      <cell x="6" y="7" visible="1" content="B" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="7" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="7" visible="1" content="U" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="7" visible="1" content="D" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="7" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="7" visible="1" content="N" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="8" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowdownright" groupindex="1" wordindex="17" ispictorialclue="0">Papa de maman ou de papa</clue>
+      </cell>
+      <cell x="1" y="8" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="16" ispictorialclue="0">Voisin de l'Arkansas</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="22" ispictorialclue="0">Esquiver</clue>
+      </cell>
+      <cell x="2" y="8" visible="1" content="M" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="8" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="8" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="8" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="8" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="8" visible="1" content="U" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="8" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="8" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="8" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowdown" groupindex="2" wordindex="23" ispictorialclue="0">Aspirera</clue>
+      </cell>
+      <cell x="11" y="8" visible="1" content="F" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="9" visible="1" content="P" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="1" y="9" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="9" visible="1" content="P" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="9" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="9" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="18" ispictorialclue="0">Ils se terminent par un réveillon</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="24" ispictorialclue="0">Colosse</clue>
+      </cell>
+      <cell x="5" y="9" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="9" visible="1" content="N" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="9" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="9" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="19" ispictorialclue="0">Se permit</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="25" ispictorialclue="0">Dis\cours de com\pli\ments</clue>
+      </cell>
+      <cell x="9" y="9" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="9" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="9" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="10" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="20" ispictorialclue="0">Règle morale</clue>
+        <clue arrow="arrowdownrightbottom" groupindex="1" wordindex="22" ispictorialclue="0">Il suit celui</clue>
+      </cell>
+      <cell x="1" y="10" visible="1" content="V" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="10" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="10" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="10" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="10" visible="1" content="U" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="10" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="21" ispictorialclue="0">Con\tre\\poi\son</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="26" ispictorialclue="0">Gâteau breton</clue>
+      </cell>
+      <cell x="7" y="10" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="10" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="10" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="10" visible="1" content="U" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="10" visible="1" content="M" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="11" visible="1" content="C" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="1" y="11" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="11" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="23" ispictorialclue="0">Une tour à Paris</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="27" ispictorialclue="0">Parole hésitante</clue>
+      </cell>
+      <cell x="3" y="11" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="11" visible="1" content="I" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="11" visible="1" content="F" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="11" visible="1" content="F" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="11" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="11" visible="1" content="L" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="11" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="24" ispictorialclue="0">Après le CP</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="28" ispictorialclue="0">Vaste étendue d'eau</clue>
+      </cell>
+      <cell x="10" y="11" visible="1" content="C" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="11" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="12" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="25" ispictorialclue="0">Essai</clue>
+        <clue arrow="arrowdownrightbottom" groupindex="1" wordindex="27" ispictorialclue="0">Hantise de pompier</clue>
+      </cell>
+      <cell x="1" y="12" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="12" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="12" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="12" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="12" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowrighttop" groupindex="1" wordindex="26" ispictorialclue="0">Assem\blage de par\ti\cules</clue>
+        <clue arrow="arrowdownbottom" groupindex="2" wordindex="29" ispictorialclue="0">Cri ovin ou caprin</clue>
+      </cell>
+      <cell x="6" y="12" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="12" visible="1" content="T" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="12" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="12" visible="1" content="M" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="12" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="12" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowdown" groupindex="2" wordindex="30" ispictorialclue="0">Reçois</clue>
+      </cell>
+      <cell x="0" y="13" visible="1" content="F" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="1" y="13" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="13" visible="1" content="U" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="13" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowright" groupindex="1" wordindex="28" ispictorialclue="0">Raccourcira un mot</clue>
+      </cell>
+      <cell x="4" y="13" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="13" visible="1" content="B" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="13" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="7" y="13" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="13" visible="1" content="G" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="13" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="13" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="13" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="0" y="14" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowright" groupindex="1" wordindex="29" ispictorialclue="0">Grand fleuve français</clue>
+      </cell>
+      <cell x="1" y="14" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="2" y="14" visible="1" content="H" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="3" y="14" visible="1" content="O" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="4" y="14" visible="1" content="N" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="5" y="14" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="6" y="14" visible="1" content="" giveaway="0" fillable="0" iscluecell="1">
+        <clue arrow="arrowright" groupindex="1" wordindex="30" ispictorialclue="0">Deviendras</clue>
+      </cell>
+      <cell x="7" y="14" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="8" y="14" visible="1" content="E" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="9" y="14" visible="1" content="R" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="10" y="14" visible="1" content="A" giveaway="0" fillable="1" iscluecell="0" />
+      <cell x="11" y="14" visible="1" content="S" giveaway="0" fillable="1" iscluecell="0" />
+    </cells>
+  </grid>
+  <wordgroups>
+    <wordgroup index="1" kind="horizontal">
+      <header>Horizontalement</header>
+      <words>
+        <word length="12" content="ANTIDERAPANT" giveaway="0" index="1">
+          <cells>
+            <cell x="0" y="1" />
+            <cell x="1" y="1" />
+            <cell x="2" y="1" />
+            <cell x="3" y="1" />
+            <cell x="4" y="1" />
+            <cell x="5" y="1" />
+            <cell x="6" y="1" />
+            <cell x="7" y="1" />
+            <cell x="8" y="1" />
+            <cell x="9" y="1" />
+            <cell x="10" y="1" />
+            <cell x="11" y="1" />
+          </cells>
+          <puzzleword>antidérapant</puzzleword>
+        </word>
+        <word length="4" content="HUGO" giveaway="0" index="2">
+          <cells>
+            <cell x="1" y="2" />
+            <cell x="2" y="2" />
+            <cell x="3" y="2" />
+            <cell x="4" y="2" />
+          </cells>
+          <puzzleword>Hugo</puzzleword>
+        </word>
+        <word length="6" content="ISOLER" giveaway="0" index="3">
+          <cells>
+            <cell x="6" y="2" />
+            <cell x="7" y="2" />
+            <cell x="8" y="2" />
+            <cell x="9" y="2" />
+            <cell x="10" y="2" />
+            <cell x="11" y="2" />
+          </cells>
+          <puzzleword>isoler</puzzleword>
+        </word>
+        <word length="3" content="BAT" giveaway="0" index="4">
+          <cells>
+            <cell x="0" y="3" />
+            <cell x="1" y="3" />
+            <cell x="2" y="3" />
+          </cells>
+          <puzzleword>bât</puzzleword>
+        </word>
+        <word length="6" content="TATOUA" giveaway="0" index="5">
+          <cells>
+            <cell x="4" y="3" />
+            <cell x="5" y="3" />
+            <cell x="6" y="3" />
+            <cell x="7" y="3" />
+            <cell x="8" y="3" />
+            <cell x="9" y="3" />
+          </cells>
+          <puzzleword>tatoua</puzzleword>
+        </word>
+        <word length="3" content="BOL" giveaway="0" index="6">
+          <cells>
+            <cell x="1" y="4" />
+            <cell x="2" y="4" />
+            <cell x="3" y="4" />
+          </cells>
+          <puzzleword>bol</puzzleword>
+        </word>
+        <word length="2" content="ME" giveaway="0" index="7">
+          <cells>
+            <cell x="5" y="4" />
+            <cell x="6" y="4" />
+          </cells>
+          <puzzleword>me</puzzleword>
+        </word>
+        <word length="4" content="RIDE" giveaway="0" index="8">
+          <cells>
+            <cell x="8" y="4" />
+            <cell x="9" y="4" />
+            <cell x="10" y="4" />
+            <cell x="11" y="4" />
+          </cells>
+          <puzzleword>ride</puzzleword>
+        </word>
+        <word length="2" content="AI" giveaway="0" index="9">
+          <cells>
+            <cell x="0" y="5" />
+            <cell x="1" y="5" />
+          </cells>
+          <puzzleword>aï</puzzleword>
+        </word>
+        <word length="8" content="ANISETTE" giveaway="0" index="10">
+          <cells>
+            <cell x="3" y="5" />
+            <cell x="4" y="5" />
+            <cell x="5" y="5" />
+            <cell x="6" y="5" />
+            <cell x="7" y="5" />
+            <cell x="8" y="5" />
+            <cell x="9" y="5" />
+            <cell x="10" y="5" />
+          </cells>
+          <puzzleword>anisette</puzzleword>
+        </word>
+        <word length="5" content="TRIEE" giveaway="0" index="11">
+          <cells>
+            <cell x="1" y="6" />
+            <cell x="2" y="6" />
+            <cell x="3" y="6" />
+            <cell x="4" y="6" />
+            <cell x="5" y="6" />
+          </cells>
+          <puzzleword>triée</puzzleword>
+        </word>
+        <word length="2" content="PO" giveaway="0" index="12">
+          <cells>
+            <cell x="7" y="6" />
+            <cell x="8" y="6" />
+          </cells>
+          <puzzleword>Pô</puzzleword>
+        </word>
+        <word length="2" content="MI" giveaway="0" index="13">
+          <cells>
+            <cell x="10" y="6" />
+            <cell x="11" y="6" />
+          </cells>
+          <puzzleword>mi</puzzleword>
+        </word>
+        <word length="5" content="BEATS" giveaway="0" index="14">
+          <cells>
+            <cell x="0" y="7" />
+            <cell x="1" y="7" />
+            <cell x="2" y="7" />
+            <cell x="3" y="7" />
+            <cell x="4" y="7" />
+          </cells>
+          <puzzleword>béats</puzzleword>
+        </word>
+        <word length="6" content="BOUDIN" giveaway="0" index="15">
+          <cells>
+            <cell x="6" y="7" />
+            <cell x="7" y="7" />
+            <cell x="8" y="7" />
+            <cell x="9" y="7" />
+            <cell x="10" y="7" />
+            <cell x="11" y="7" />
+          </cells>
+          <puzzleword>boudin</puzzleword>
+        </word>
+        <word length="8" content="MISSOURI" giveaway="0" index="16">
+          <cells>
+            <cell x="2" y="8" />
+            <cell x="3" y="8" />
+            <cell x="4" y="8" />
+            <cell x="5" y="8" />
+            <cell x="6" y="8" />
+            <cell x="7" y="8" />
+            <cell x="8" y="8" />
+            <cell x="9" y="8" />
+          </cells>
+          <puzzleword>Missouri</puzzleword>
+        </word>
+        <word length="4" content="PEPE" giveaway="0" index="17">
+          <cells>
+            <cell x="0" y="9" />
+            <cell x="1" y="9" />
+            <cell x="2" y="9" />
+            <cell x="3" y="9" />
+          </cells>
+          <puzzleword>pépé</puzzleword>
+        </word>
+        <word length="3" content="ANS" giveaway="0" index="18">
+          <cells>
+            <cell x="5" y="9" />
+            <cell x="6" y="9" />
+            <cell x="7" y="9" />
+          </cells>
+          <puzzleword>ans</puzzleword>
+        </word>
+        <word length="3" content="OSA" giveaway="0" index="19">
+          <cells>
+            <cell x="9" y="9" />
+            <cell x="10" y="9" />
+            <cell x="11" y="9" />
+          </cells>
+          <puzzleword>osa</puzzleword>
+        </word>
+        <word length="5" content="VERTU" giveaway="0" index="20">
+          <cells>
+            <cell x="1" y="10" />
+            <cell x="2" y="10" />
+            <cell x="3" y="10" />
+            <cell x="4" y="10" />
+            <cell x="5" y="10" />
+          </cells>
+          <puzzleword>vertu</puzzleword>
+        </word>
+        <word length="5" content="SERUM" giveaway="0" index="21">
+          <cells>
+            <cell x="7" y="10" />
+            <cell x="8" y="10" />
+            <cell x="9" y="10" />
+            <cell x="10" y="10" />
+            <cell x="11" y="10" />
+          </cells>
+          <puzzleword>sérum</puzzleword>
+        </word>
+        <word length="2" content="CI" giveaway="0" index="22">
+          <cells>
+            <cell x="0" y="11" />
+            <cell x="1" y="11" />
+          </cells>
+          <puzzleword>ci</puzzleword>
+        </word>
+        <word length="6" content="EIFFEL" giveaway="0" index="23">
+          <cells>
+            <cell x="3" y="11" />
+            <cell x="4" y="11" />
+            <cell x="5" y="11" />
+            <cell x="6" y="11" />
+            <cell x="7" y="11" />
+            <cell x="8" y="11" />
+          </cells>
+          <puzzleword>Eiffel</puzzleword>
+        </word>
+        <word length="2" content="CE" giveaway="0" index="24">
+          <cells>
+            <cell x="10" y="11" />
+            <cell x="11" y="11" />
+          </cells>
+          <puzzleword>CE</puzzleword>
+        </word>
+        <word length="4" content="TEST" giveaway="0" index="25">
+          <cells>
+            <cell x="1" y="12" />
+            <cell x="2" y="12" />
+            <cell x="3" y="12" />
+            <cell x="4" y="12" />
+          </cells>
+          <puzzleword>test</puzzleword>
+        </word>
+        <word length="5" content="ATOME" giveaway="0" index="26">
+          <cells>
+            <cell x="6" y="12" />
+            <cell x="7" y="12" />
+            <cell x="8" y="12" />
+            <cell x="9" y="12" />
+            <cell x="10" y="12" />
+          </cells>
+          <puzzleword>atome</puzzleword>
+        </word>
+        <word length="3" content="FEU" giveaway="0" index="27">
+          <cells>
+            <cell x="0" y="13" />
+            <cell x="1" y="13" />
+            <cell x="2" y="13" />
+          </cells>
+          <puzzleword>feu</puzzleword>
+        </word>
+        <word length="8" content="ABREGERA" giveaway="0" index="28">
+          <cells>
+            <cell x="4" y="13" />
+            <cell x="5" y="13" />
+            <cell x="6" y="13" />
+            <cell x="7" y="13" />
+            <cell x="8" y="13" />
+            <cell x="9" y="13" />
+            <cell x="10" y="13" />
+            <cell x="11" y="13" />
+          </cells>
+          <puzzleword>abrégera</puzzleword>
+        </word>
+        <word length="5" content="RHONE" giveaway="0" index="29">
+          <cells>
+            <cell x="1" y="14" />
+            <cell x="2" y="14" />
+            <cell x="3" y="14" />
+            <cell x="4" y="14" />
+            <cell x="5" y="14" />
+          </cells>
+          <puzzleword>Rhône</puzzleword>
+        </word>
+        <word length="5" content="SERAS" giveaway="0" index="30">
+          <cells>
+            <cell x="7" y="14" />
+            <cell x="8" y="14" />
+            <cell x="9" y="14" />
+            <cell x="10" y="14" />
+            <cell x="11" y="14" />
+          </cells>
+          <puzzleword>seras</puzzleword>
+        </word>
+      </words>
+    </wordgroup>
+    <wordgroup index="2" kind="vertical">
+      <header>Verticalement</header>
+      <words>
+        <word length="8" content="INHABITE" giveaway="0" index="1">
+          <cells>
+            <cell x="1" y="0" />
+            <cell x="1" y="1" />
+            <cell x="1" y="2" />
+            <cell x="1" y="3" />
+            <cell x="1" y="4" />
+            <cell x="1" y="5" />
+            <cell x="1" y="6" />
+            <cell x="1" y="7" />
+          </cells>
+          <puzzleword>inhabité</puzzleword>
+        </word>
+        <word length="3" content="ZIG" giveaway="0" index="2">
+          <cells>
+            <cell x="3" y="0" />
+            <cell x="3" y="1" />
+            <cell x="3" y="2" />
+          </cells>
+          <puzzleword>zig</puzzleword>
+        </word>
+        <word length="2" content="DE" giveaway="0" index="3">
+          <cells>
+            <cell x="5" y="0" />
+            <cell x="5" y="1" />
+          </cells>
+          <puzzleword>dé</puzzleword>
+        </word>
+        <word length="4" content="MASO" giveaway="0" index="4">
+          <cells>
+            <cell x="7" y="0" />
+            <cell x="7" y="1" />
+            <cell x="7" y="2" />
+            <cell x="7" y="3" />
+          </cells>
+          <puzzleword>maso</puzzleword>
+        </word>
+        <word length="6" content="CALAIT" giveaway="0" index="5">
+          <cells>
+            <cell x="9" y="0" />
+            <cell x="9" y="1" />
+            <cell x="9" y="2" />
+            <cell x="9" y="3" />
+            <cell x="9" y="4" />
+            <cell x="9" y="5" />
+          </cells>
+          <puzzleword>calait</puzzleword>
+        </word>
+        <word length="5" content="STRIE" giveaway="0" index="6">
+          <cells>
+            <cell x="11" y="0" />
+            <cell x="11" y="1" />
+            <cell x="11" y="2" />
+            <cell x="11" y="3" />
+            <cell x="11" y="4" />
+          </cells>
+          <puzzleword>strié</puzzleword>
+        </word>
+        <word length="4" content="TUTO" giveaway="0" index="7">
+          <cells>
+            <cell x="2" y="1" />
+            <cell x="2" y="2" />
+            <cell x="2" y="3" />
+            <cell x="2" y="4" />
+          </cells>
+          <puzzleword>tuto</puzzleword>
+        </word>
+        <word length="3" content="DOT" giveaway="0" index="8">
+          <cells>
+            <cell x="4" y="1" />
+            <cell x="4" y="2" />
+            <cell x="4" y="3" />
+          </cells>
+          <puzzleword>dot</puzzleword>
+        </word>
+        <word length="5" content="RITES" giveaway="0" index="9">
+          <cells>
+            <cell x="6" y="1" />
+            <cell x="6" y="2" />
+            <cell x="6" y="3" />
+            <cell x="6" y="4" />
+            <cell x="6" y="5" />
+          </cells>
+          <puzzleword>rites</puzzleword>
+        </word>
+        <word length="8" content="POURTOUR" giveaway="0" index="10">
+          <cells>
+            <cell x="8" y="1" />
+            <cell x="8" y="2" />
+            <cell x="8" y="3" />
+            <cell x="8" y="4" />
+            <cell x="8" y="5" />
+            <cell x="8" y="6" />
+            <cell x="8" y="7" />
+            <cell x="8" y="8" />
+          </cells>
+          <puzzleword>pourtour</puzzleword>
+        </word>
+        <word length="2" content="NE" giveaway="0" index="11">
+          <cells>
+            <cell x="10" y="1" />
+            <cell x="10" y="2" />
+          </cells>
+          <puzzleword>ne</puzzleword>
+        </word>
+        <word length="4" content="AMIE" giveaway="0" index="12">
+          <cells>
+            <cell x="5" y="3" />
+            <cell x="5" y="4" />
+            <cell x="5" y="5" />
+            <cell x="5" y="6" />
+          </cells>
+          <puzzleword>amie</puzzleword>
+        </word>
+        <word length="9" content="LAITIERES" giveaway="0" index="13">
+          <cells>
+            <cell x="3" y="4" />
+            <cell x="3" y="5" />
+            <cell x="3" y="6" />
+            <cell x="3" y="7" />
+            <cell x="3" y="8" />
+            <cell x="3" y="9" />
+            <cell x="3" y="10" />
+            <cell x="3" y="11" />
+            <cell x="3" y="12" />
+          </cells>
+          <puzzleword>laitières</puzzleword>
+        </word>
+        <word length="4" content="DEMI" giveaway="0" index="14">
+          <cells>
+            <cell x="10" y="4" />
+            <cell x="10" y="5" />
+            <cell x="10" y="6" />
+            <cell x="10" y="7" />
+          </cells>
+          <puzzleword>demi</puzzleword>
+        </word>
+        <word length="4" content="NESS" giveaway="0" index="15">
+          <cells>
+            <cell x="4" y="5" />
+            <cell x="4" y="6" />
+            <cell x="4" y="7" />
+            <cell x="4" y="8" />
+          </cells>
+          <puzzleword>Ness</puzzleword>
+        </word>
+        <word length="10" content="EPOUSSETES" giveaway="0" index="16">
+          <cells>
+            <cell x="7" y="5" />
+            <cell x="7" y="6" />
+            <cell x="7" y="7" />
+            <cell x="7" y="8" />
+            <cell x="7" y="9" />
+            <cell x="7" y="10" />
+            <cell x="7" y="11" />
+            <cell x="7" y="12" />
+            <cell x="7" y="13" />
+            <cell x="7" y="14" />
+          </cells>
+          <puzzleword>époussetés</puzzleword>
+        </word>
+        <word length="5" content="RAMPE" giveaway="0" index="17">
+          <cells>
+            <cell x="2" y="6" />
+            <cell x="2" y="7" />
+            <cell x="2" y="8" />
+            <cell x="2" y="9" />
+            <cell x="2" y="10" />
+          </cells>
+          <puzzleword>rampe</puzzleword>
+        </word>
+        <word length="6" content="INFAME" giveaway="0" index="18">
+          <cells>
+            <cell x="11" y="6" />
+            <cell x="11" y="7" />
+            <cell x="11" y="8" />
+            <cell x="11" y="9" />
+            <cell x="11" y="10" />
+            <cell x="11" y="11" />
+          </cells>
+          <puzzleword>infâme</puzzleword>
+        </word>
+        <word length="3" content="BON" giveaway="0" index="19">
+          <cells>
+            <cell x="6" y="7" />
+            <cell x="6" y="8" />
+            <cell x="6" y="9" />
+          </cells>
+          <puzzleword>bon</puzzleword>
+        </word>
+        <word length="4" content="DIOR" giveaway="0" index="20">
+          <cells>
+            <cell x="9" y="7" />
+            <cell x="9" y="8" />
+            <cell x="9" y="9" />
+            <cell x="9" y="10" />
+          </cells>
+          <puzzleword>Dior</puzzleword>
+        </word>
+        <word length="4" content="SAUF" giveaway="0" index="21">
+          <cells>
+            <cell x="5" y="8" />
+            <cell x="5" y="9" />
+            <cell x="5" y="10" />
+            <cell x="5" y="11" />
+          </cells>
+          <puzzleword>sauf</puzzleword>
+        </word>
+        <word length="6" content="EVITER" giveaway="0" index="22">
+          <cells>
+            <cell x="1" y="9" />
+            <cell x="1" y="10" />
+            <cell x="1" y="11" />
+            <cell x="1" y="12" />
+            <cell x="1" y="13" />
+            <cell x="1" y="14" />
+          </cells>
+          <puzzleword>éviter</puzzleword>
+        </word>
+        <word length="6" content="SUCERA" giveaway="0" index="23">
+          <cells>
+            <cell x="10" y="9" />
+            <cell x="10" y="10" />
+            <cell x="10" y="11" />
+            <cell x="10" y="12" />
+            <cell x="10" y="13" />
+            <cell x="10" y="14" />
+          </cells>
+          <puzzleword>sucera</puzzleword>
+        </word>
+        <word length="5" content="TITAN" giveaway="0" index="24">
+          <cells>
+            <cell x="4" y="10" />
+            <cell x="4" y="11" />
+            <cell x="4" y="12" />
+            <cell x="4" y="13" />
+            <cell x="4" y="14" />
+          </cells>
+          <puzzleword>titan</puzzleword>
+        </word>
+        <word length="5" content="ELOGE" giveaway="0" index="25">
+          <cells>
+            <cell x="8" y="10" />
+            <cell x="8" y="11" />
+            <cell x="8" y="12" />
+            <cell x="8" y="13" />
+            <cell x="8" y="14" />
+          </cells>
+          <puzzleword>éloge</puzzleword>
+        </word>
+        <word length="3" content="FAR" giveaway="0" index="26">
+          <cells>
+            <cell x="6" y="11" />
+            <cell x="6" y="12" />
+            <cell x="6" y="13" />
+          </cells>
+          <puzzleword>far</puzzleword>
+        </word>
+        <word length="3" content="EUH" giveaway="0" index="27">
+          <cells>
+            <cell x="2" y="12" />
+            <cell x="2" y="13" />
+            <cell x="2" y="14" />
+          </cells>
+          <puzzleword>euh</puzzleword>
+        </word>
+        <word length="3" content="MER" giveaway="0" index="28">
+          <cells>
+            <cell x="9" y="12" />
+            <cell x="9" y="13" />
+            <cell x="9" y="14" />
+          </cells>
+          <puzzleword>mer</puzzleword>
+        </word>
+        <word length="2" content="BE" giveaway="0" index="29">
+          <cells>
+            <cell x="5" y="13" />
+            <cell x="5" y="14" />
+          </cells>
+          <puzzleword>bê</puzzleword>
+        </word>
+        <word length="2" content="AS" giveaway="0" index="30">
+          <cells>
+            <cell x="11" y="13" />
+            <cell x="11" y="14" />
+          </cells>
+          <puzzleword>as</puzzleword>
+        </word>
+      </words>
+    </wordgroup>
+  </wordgroups>
+  <resultwords />
+</puzzle>

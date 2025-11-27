@@ -1,4 +1,4 @@
-from data import Grid, GridFilling, Direction, ClueAnswerPair, Point
+from data import*
 from py_mini_racer import MiniRacer
 from typing import List
 import json
@@ -114,11 +114,10 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     clue_answer_pairs = []
     clue_number = 0
     hor_right = "a"
-    hor_right_ver_down = "hief"
+    hor_right_ver_down = "hiefg"
     hor_right_hor_down = "qrosp"
     ver_right_hor_down = "txvwu"
     ver_right_ver_down = "nmlkj"
-    # ver_right_hor_down = "g"
     ver_right = "c"
     ver_down = "b"
     hor_down = "d"
@@ -130,9 +129,8 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
             if j >= width:
                 break
             char = line[j]
-            if char in "yz":
-                print(crossword_grid)
-                raise Exception()
+            if char not in  hor_right + hor_right_ver_down + hor_right_hor_down + ver_right_hor_down + ver_right_ver_down + ver_right + ver_down + hor_down:
+                raise GridConversionError(f"Unknown clue position indicator: {char}.")
             if char in hor_right + hor_right_hor_down + hor_right_ver_down:
                 # Retrieval of the horizontal clue on the right
                 clue_answer_pairs.append(
