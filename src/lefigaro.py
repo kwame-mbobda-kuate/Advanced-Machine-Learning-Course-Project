@@ -1,6 +1,8 @@
 from data import Grid, GridFilling, Direction, ClueAnswerPair, Point, GridConversionError
 import datetime
 import xml.etree.ElementTree as ET
+import json
+
 
 def convert_lefigaro_arrow_crossword_grid(crossword_grid: str) -> Grid:
     root = ET.fromstring(crossword_grid)
@@ -40,4 +42,5 @@ def convert_lefigaro_arrow_crossword_grid(crossword_grid: str) -> Grid:
 
 if __name__ == "__main__":
     with open("data/test/lefigaro_grid_1.xml", "r") as f:
-        print(convert_lefigaro_arrow_crossword_grid(f.read()).clue_answer_pairs)
+        grid = convert_lefigaro_arrow_crossword_grid(f.read())
+        print(json.dumps())

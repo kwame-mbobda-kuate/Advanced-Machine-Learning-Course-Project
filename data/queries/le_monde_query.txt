@@ -1,0 +1,140 @@
+query GameDetail($gameSlug: String!, $gridSlug: String!) {
+    game(slug: $gameSlug) {
+    id
+    __typename
+    name
+    slug
+    author
+    ...GameTheme
+    ...CrosswordGameDetail
+    ...SudokuGameDetail
+    ...TheWordsGameDetail
+    }
+}
+
+fragment CrosswordGameDetail on CrosswordGame {
+    ...GridGameDetail
+    grid(slug: $gridSlug) {
+    ...CrosswordDetail
+    }
+}
+
+fragment GridGameDetail on Game {
+    name
+    slug
+    author
+    grid(slug: $gridSlug) {
+    id
+    date
+    slug
+    free
+    freeGridNumber
+    userGrid {
+        id
+        complete
+        updatedAt
+    }
+    }
+}
+
+fragment CrosswordDetail on Crossword {
+    grid {
+    dimensions
+    definitions {
+        coords
+        orientation
+        text
+        solution
+    }
+    }
+    userGrid {
+    state {
+        selectedIndex
+        values
+        verifiedCases
+        revealedCases
+        duration
+        paused
+        started
+        complete
+    }
+    }
+}
+
+fragment SudokuGameDetail on SudokuGame {
+    ...GridGameDetail
+    grid(slug: $gridSlug) {
+    ...SudokuDetail
+    }
+}
+
+fragment SudokuDetail on Sudoku {
+    grid {
+    puzzle
+    solution
+    }
+    userGrid {
+    sudokuState: state {
+        selectedIndex
+        values
+        verifiedCases
+        revealedCases
+        duration
+        paused
+        started
+        complete
+    }
+    }
+}
+
+fragment TheWordsGameDetail on TheWordsGame {
+    ...GridGameDetail
+    grid(slug: $gridSlug) {
+    ...TheWordsDetail
+    }
+}
+
+fragment TheWordsDetail on TheWords {
+    id
+    grid {
+    letters
+    matchingWords
+    }
+    userGrid {
+    id
+    state {
+        guessedWords
+        startedAt
+        completedAt
+        complete
+        gameDuration
+    }
+    }
+    stats {
+    completedGridsCount
+    totalFoundWordsCount
+    gridBestScore
+    playersScores {
+        label
+        min
+        max
+        playersCount
+    }
+    lastDaysScores {
+        label
+        score
+    }
+    lastMonthsScores {
+        label
+        score
+    }
+    lastYearsScores {
+        label
+        score
+    }
+    }
+}
+
+fragment GameTheme on Game {
+    color
+}

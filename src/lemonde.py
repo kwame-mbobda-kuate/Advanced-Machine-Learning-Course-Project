@@ -1,9 +1,14 @@
+import asyncio
 from data import Grid, GridFilling, Direction, ClueAnswerPair, Point
+import aiohttp
+import datetime
 import json
 
+with open("data/queries/le_monde_query.txt", "r") as f:
+    query = f.read()
 
-def convert_lemonde_crosssword_grid(crossword_grid: str) -> Grid:
-    game = json.loads(crossword_grid)["data"]["game"]
+def convert_lemonde_crosssword_grid(crossword_grid: dict) -> Grid:
+    game = crossword_grid["data"]["game"]
     author = game.get("author", None)
     grid = game["grid"]["grid"]
     grid_layout = [
@@ -12,7 +17,7 @@ def convert_lemonde_crosssword_grid(crossword_grid: str) -> Grid:
     ]
     clue_answer_pairs = []
     for definition in grid["definitions"]:
-        clue = definition["text"]
+        clue = definition["text"].replace("  ", " ")
         answer = definition["solution"]
         start = Point(definition["coords"][1], definition["coords"][0])
         if definition["orientation"] == "horizontal":
@@ -32,8 +37,25 @@ def convert_lemonde_crosssword_grid(crossword_grid: str) -> Grid:
     )
 
 
+async def download_crossword_grid(date: datetime.date, session: aiohttp.ClientSession) -> Grid:
+    url = "https://jeux-api.lemonde.fr/graphql"
+    headers = {"content-type": "application/json"}
+    variables = {"gameSlug": "mots-croises", "gridSlug": date.strftime("%d-%m-%Y")}
+    payload = {
+        "query": query,
+        "variables": variables,
+        "operationName": "GameDetail"
+    }
+    async with session.post(url, headers=headers, json=payload) as response:
+        if response.status == 200:
+            result = await response.json()
+            return convert_lemonde_crosssword_grid(result)
+        else:
+            raise Exception(f"Request failed with status {response.status}")
+
+
 if __name__ == "__main__":
-    with open("data/test/le_monde_grid_1.json", "r") as f:
-        print(convert_lemonde_crosssword_grid(f.read()).clue_answer_pairs)
-    with open("data/test/le_monde_grid_mini_1.json", "r") as f:
-        print(convert_lemonde_crosssword_grid(f.read()).clue_answer_pairs)
+    async def g():
+        async with aiohttp.ClientSession() as session:
+            return await download_crossword_grid(datetime.datetime.now(), session)
+    print(asyncio.run(g()).clue_answer_pairs)

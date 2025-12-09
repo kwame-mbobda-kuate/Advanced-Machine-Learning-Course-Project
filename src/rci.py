@@ -1,4 +1,4 @@
-from data import*
+from data import *
 from py_mini_racer import MiniRacer
 from typing import List
 import json
@@ -121,7 +121,8 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     ver_right = "c"
     ver_down = "b"
     hor_down = "d"
-    # y, z ?
+    # y
+    # z : voir https://www.rcijeux.fr/drupal_game/lci/mfleches/grids/5439.mfj
     for i, line in enumerate(grille):
         j = 0
         while j < width:
@@ -129,7 +130,17 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
             if j >= width:
                 break
             char = line[j]
-            if char not in  hor_right + hor_right_ver_down + hor_right_hor_down + ver_right_hor_down + ver_right_ver_down + ver_right + ver_down + hor_down:
+            if (
+                char
+                not in hor_right
+                + hor_right_ver_down
+                + hor_right_hor_down
+                + ver_right_hor_down
+                + ver_right_ver_down
+                + ver_right
+                + ver_down
+                + hor_down
+            ):
                 raise GridConversionError(f"Unknown clue position indicator: {char}.")
             if char in hor_right + hor_right_hor_down + hor_right_ver_down:
                 # Retrieval of the horizontal clue on the right
@@ -193,6 +204,28 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     )
 
 
+endpoints = [
+    ("https://www.rcijeux.fr/drupal_game/lacroix/mcroises1/grids/gary{}.mcj", 8779),
+    ("https://www.rcijeux.fr/drupal_game/lacroix/mcroises3/grids/olivier{}.mcj", 311),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_4_{}.mcj", 1423),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_3_{}.mcj", 1423),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_2_{}.mcj", 1423),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_1_{}.mcj", 1423),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_4_{}.mfj", 3789),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_3_{}.mfj", 3789),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_2_{}.mfj", 3789),
+    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_1_{}.mfj", 3789),
+    ("https://www.rcijeux.fr/drupal_game/lebelage/mfleches/grids/{}.mfj", 1442),
+    ("https://www.rcijeux.fr/drupal_game/lebelage/mcroises/grids/{}.mcj", 1442),
+    ("https://www.rcijeux.fr/drupal_game/nrco/mfleches/grids/{}.mfj", 2002),
+    ("https://www.rcijeux.fr/drupal_game/nrco/mcroises/grids/{}.mcj", 2002),
+    ("https://www.rcijeux.fr/drupal_game/lci/mcroises/grids/{}.mcj", 4783),
+    ("https://www.rcijeux.fr/drupal_game/lci/mfleches/grids/{}.mfj", 5439),
+    ("https://www.rcijeux.fr/drupal_game/cnews/mfleches/grids/{}.mfj", 1939),
+    ("https://www.rcijeux.fr/drupal_game/cnews/mfleches/grids/{}.mcj", 1939),
+    ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mcj", 4550),
+    ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mfj", 4550)
+]
 
 
 if __name__ == "__main__":
