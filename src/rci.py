@@ -1,7 +1,12 @@
 from data import *
 from py_mini_racer import MiniRacer
-from typing import List
+from typing import List, Tuple
 import json
+import requests
+import os
+import time
+
+DELAY = 2
 
 
 def parse_RCI_crossword_grid(crossword_grid: str) -> dict:
@@ -11,10 +16,11 @@ def parse_RCI_crossword_grid(crossword_grid: str) -> dict:
 
 
 def transpose(grid: List[List[str]]) -> List[List[str]]:
-    transposed = [[None] * len(grid) for k in range(len(grid[0]))]
-    for i in range(len(grid)):
-        for j in range(len(grid[0])):
-            transposed[j][i] = grid[i][j]
+    width, height = len(grid[0][0]), len(grid)
+    transposed = []
+    for j in range(width):
+        v_line = "".join(grid[i][0][j] for i in range(height))
+        transposed.append([v_line])
     return transposed
 
 
@@ -43,7 +49,6 @@ def extract_clue_answer_pairs_RCI_crossword_grid(
 
 def convert_RCI_crossword_grid(crossword_grid: str) -> Grid:
     json_crossword_grid = parse_RCI_crossword_grid(crossword_grid)
-    difficulty = int(json_crossword_grid["force"])
     clues_h = extract_clue_answer_pairs_RCI_crossword_grid(
         json_crossword_grid["grille"],
         json_crossword_grid["definitionsh"],
@@ -63,7 +68,7 @@ def convert_RCI_crossword_grid(crossword_grid: str) -> Grid:
         ]
         grid_layout.append(layout_line)
     difficulty = json_crossword_grid.get("force", None)
-    if difficulty is not None:
+    if difficulty:
         difficulty = int(difficulty)
     return Grid(
         grid_layout=grid_layout,
@@ -106,7 +111,9 @@ def join_clue(l: List[str]) -> str:
 
 def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     json_crossword_grid = parse_RCI_crossword_grid(crossword_grid)
-    difficulty = int(json_crossword_grid["force"])
+    difficulty = None
+    if json_crossword_grid["force"]:
+        difficulty = int(json_crossword_grid["force"])
     grille = json_crossword_grid["grille"]
     clues = json_crossword_grid["definitions"]
     width = len(grille[0])
@@ -121,7 +128,8 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     ver_right = "c"
     ver_down = "b"
     hor_down = "d"
-    # y
+    filled = "z"
+    # y?
     # z : voir https://www.rcijeux.fr/drupal_game/lci/mfleches/grids/5439.mfj
     for i, line in enumerate(grille):
         j = 0
@@ -130,6 +138,8 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
             if j >= width:
                 break
             char = line[j]
+            if char in filled:
+                continue
             if (
                 char
                 not in hor_right
@@ -207,14 +217,38 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
 endpoints = [
     ("https://www.rcijeux.fr/drupal_game/lacroix/mcroises1/grids/gary{}.mcj", 8779),
     ("https://www.rcijeux.fr/drupal_game/lacroix/mcroises3/grids/olivier{}.mcj", 311),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_4_{}.mcj", 1423),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_3_{}.mcj", 1423),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_2_{}.mcj", 1423),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_1_{}.mcj", 1423),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_4_{}.mfj", 3789),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_3_{}.mfj", 3789),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_2_{}.mfj", 3789),
-    ("https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_1_{}.mfj", 3789),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_4_{}.mcj",
+        1423,
+    ),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_3_{}.mcj",
+        1423,
+    ),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_2_{}.mcj",
+        1423,
+    ),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_1_{}.mcj",
+        1423,
+    ),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_4_{}.mfj",
+        3789,
+    ),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_3_{}.mfj",
+        3789,
+    ),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_2_{}.mfj",
+        3789,
+    ),
+    (
+        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_1_{}.mfj",
+        3789,
+    ),
     ("https://www.rcijeux.fr/drupal_game/lebelage/mfleches/grids/{}.mfj", 1442),
     ("https://www.rcijeux.fr/drupal_game/lebelage/mcroises/grids/{}.mcj", 1442),
     ("https://www.rcijeux.fr/drupal_game/nrco/mfleches/grids/{}.mfj", 2002),
@@ -224,12 +258,32 @@ endpoints = [
     ("https://www.rcijeux.fr/drupal_game/cnews/mfleches/grids/{}.mfj", 1939),
     ("https://www.rcijeux.fr/drupal_game/cnews/mfleches/grids/{}.mcj", 1939),
     ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mcj", 4550),
-    ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mfj", 4550)
+    ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mfj", 4550),
 ]
 
 
+def download_all_endpoints(endpoints: List[Tuple[str, int]]):
+    grids = []
+    for endpoint, end_index in endpoints:
+        for k in range(end_index, 0, -1):
+            r = requests.get(endpoint.format(k))
+            time.sleep(DELAY)
+            print(endpoint.format(k), r.status_code)
+            if r.status_code == 200:
+                text = r.text
+                if endpoint.endswith("mfj"):
+                    grid = convert_RCI_arrow_crossword_grid(text)
+                if endpoint.endswith("mcj"):
+                    grid = convert_RCI_crossword_grid(text)
+                grids.append(grid)
+            else:
+                break
+        provider = endpoint.split("/")[-4]
+        os.makedirs(f"data/grids/{provider}", exist_ok=True)
+        for k, grid in enumerate(grid):
+            if isinstance(grid, Grid):
+                with open(f"data/grids/{provider}/{k}.json", "wb") as f:
+                    json.dump(grid, f, default=GridEncoder())
+
 if __name__ == "__main__":
-    with open("data/test/rci_grid_1.js", "r") as f:
-        print(convert_RCI_crossword_grid(f.read()).clue_answer_pairs)
-    with open("data/test/rci_grid_2.js", "r") as f:
-        print(convert_RCI_arrow_crossword_grid(f.read()).clue_answer_pairs)
+    download_all_endpoints([endpoints[1]])
