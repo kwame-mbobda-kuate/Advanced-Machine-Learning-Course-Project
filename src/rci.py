@@ -6,8 +6,6 @@ import requests
 import os
 import time
 
-DELAY = 2
-
 
 def parse_RCI_crossword_grid(crossword_grid: str) -> dict:
     ctx = MiniRacer()
@@ -262,28 +260,42 @@ endpoints = [
 ]
 
 
-def download_all_endpoints(endpoints: List[Tuple[str, int]]):
-    grids = []
+def download_grid(endpoint: str):
+    r = requests.get(endpoint)
+    if r.status_code == 200:
+        text = r.text
+        if endpoint.endswith("mfj"):
+            grid = convert_RCI_arrow_crossword_grid(text)
+        if endpoint.endswith("mcj"):
+            grid = convert_RCI_crossword_grid(text)
+        return grid
+    else:
+        return None
+
+
+def download_all_endpoints(endpoints: List[Tuple[str, int]], delay: float, max_failures: int):
     for endpoint, end_index in endpoints:
-        for k in range(end_index, 0, -1):
-            r = requests.get(endpoint.format(k))
-            time.sleep(DELAY)
-            print(endpoint.format(k), r.status_code)
-            if r.status_code == 200:
-                text = r.text
-                if endpoint.endswith("mfj"):
-                    grid = convert_RCI_arrow_crossword_grid(text)
-                if endpoint.endswith("mcj"):
-                    grid = convert_RCI_crossword_grid(text)
-                grids.append(grid)
-            else:
-                break
         provider = endpoint.split("/")[-4]
-        os.makedirs(f"data/grids/{provider}", exist_ok=True)
-        for k, grid in enumerate(grid):
-            if isinstance(grid, Grid):
-                with open(f"data/grids/{provider}/{k}.json", "wb") as f:
-                    json.dump(grid, f, default=GridEncoder())
+        os.makedirs(f"data/grids/{provider}", exist_ok=True)            
+        k = end_index
+        for offset in (1, -1):
+            failures = 0
+            while failures < max_failures:
+                file_path = f"data/grids/{provider}/{k}.json"
+                if os.path.exists(file_path):
+                    k += offset
+                    failures = 0
+                    continue
+                if grid := download_grid(endpoint.format(k)) is not None:
+                    grids.append((grid, k))
+                    failures = 0
+                    with open(file_path, "w") as f:
+                        f.write(json.dumps(grid, cls=GridEncoder))
+                else:
+                    failures += 1
+                k += offset
+                time.sleep(delay)
+            k = end_index - 1
 
 if __name__ == "__main__":
-    download_all_endpoints([endpoints[1]])
+    pass

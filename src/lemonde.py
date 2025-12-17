@@ -1,11 +1,13 @@
-import asyncio
 from data import Grid, GridFilling, Direction, ClueAnswerPair, Point
-import aiohttp
-import datetime
+import requests
+import os
+import time
+from datetime import datetime, timedelta
 import json
 
 with open("data/queries/le_monde_query.txt", "r") as f:
     query = f.read()
+
 
 def convert_lemonde_crosssword_grid(crossword_grid: dict) -> Grid:
     game = crossword_grid["data"]["game"]
@@ -37,25 +39,38 @@ def convert_lemonde_crosssword_grid(crossword_grid: dict) -> Grid:
     )
 
 
-async def download_crossword_grid(date: datetime.date, session: aiohttp.ClientSession) -> Grid:
+def download_crossword_grid(date: datetime.date) -> Grid:
     url = "https://jeux-api.lemonde.fr/graphql"
     headers = {"content-type": "application/json"}
     variables = {"gameSlug": "mots-croises", "gridSlug": date.strftime("%d-%m-%Y")}
-    payload = {
-        "query": query,
-        "variables": variables,
-        "operationName": "GameDetail"
-    }
-    async with session.post(url, headers=headers, json=payload) as response:
-        if response.status == 200:
-            result = await response.json()
-            return convert_lemonde_crosssword_grid(result)
+    payload = {"query": query, "variables": variables, "operationName": "GameDetail"}
+    r = requests.post(url, headers=headers, json=payload)
+    if r.status_code == 200:
+        result = r.json()
+        return convert_lemonde_crosssword_grid(result)
+    else:
+        return None
+
+
+def download_all(delay: float, max_failures: int):
+    date = datetime.today()
+    os.makedirs("data/grids/le_monde", exist_ok=True)
+    failures = 0
+    while failures < max_failures:
+        file_path = (f"data/grids/le_monde/{date.strftime('%d-%m-%Y')}.json",)
+        if os.path.exists(file_path):
+            date -= timedelta(days=1)
+            failures = 0
+            continue
+        if grid := download_crossword_grid(date) is not None:
+            with open(file_path, "w") as f:
+                f.write(json.dumps(grid, cls=GridEncoder))
+            failures = 0
         else:
-            raise Exception(f"Request failed with status {response.status}")
+            failures += 1
+        date -= timedelta(days=1)
+        time.sleep(delay)
 
 
 if __name__ == "__main__":
-    async def g():
-        async with aiohttp.ClientSession() as session:
-            return await download_crossword_grid(datetime.datetime.now(), session)
-    print(asyncio.run(g()).clue_answer_pairs)
+    pass
