@@ -12,7 +12,11 @@ import json
 
 
 def convert_lefigaro_arrow_crossword_grid(crossword_grid: str) -> Grid:
+    if crossword_grid == "Invalid xml request":
+        raise GridConversionError("Incorrect KFR number.")
     root = ET.fromstring(crossword_grid)
+    if root.attrib["type"] != "Arrowword":
+        raise GridConversionError("The XML file doesn’t represent a crossword grid.")
     clues = {Direction.HORIZONTAL: {}, Direction.VERTICAL: {}}
     grid_layout = [
         [GridFilling.BLOCKED] * int(root.attrib["width"])

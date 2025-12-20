@@ -39,10 +39,10 @@ def convert_lemonde_crosssword_grid(crossword_grid: dict) -> Grid:
     )
 
 
-def download_crossword_grid(date: datetime.date) -> Grid:
+def download_crossword_grid(date: datetime, type_grid: str) -> Grid:
     url = "https://jeux-api.lemonde.fr/graphql"
     headers = {"content-type": "application/json"}
-    variables = {"gameSlug": "mots-croises", "gridSlug": date.strftime("%d-%m-%Y")}
+    variables = {"gameSlug": type_grid, "gridSlug": date.strftime("%d-%m-%Y")}
     payload = {"query": query, "variables": variables, "operationName": "GameDetail"}
     r = requests.post(url, headers=headers, json=payload)
     if r.status_code == 200:
@@ -53,24 +53,34 @@ def download_crossword_grid(date: datetime.date) -> Grid:
 
 
 def download_all(delay: float, max_failures: int):
-    date = datetime.today()
-    os.makedirs("data/grids/le_monde", exist_ok=True)
-    failures = 0
-    while failures < max_failures:
-        file_path = (f"data/grids/le_monde/{date.strftime('%d-%m-%Y')}.json",)
-        if os.path.exists(file_path):
+    for type_grid in ("mini-mots-croises", "mots-croises"):
+        failures = 0
+        date = datetime.today()
+        os.makedirs(f"data/grids/le_monde/{type_grid}", exist_ok=True)
+        while failures < max_failures:
+            file_path = (
+                f"data/grids/le_monde/{type_grid}/{date.strftime('%d-%m-%Y')}.json"
+            )
+            if os.path.exists(file_path):
+                print(f"{date} exists")
+                date -= timedelta(days=1)
+                failures = 0
+                continue
+            try:
+                grid = download_crossword_grid(date, type_grid)
+            except Exception as e:
+                print(e)
+                failures += 1
+            else:
+                if grid is not None:
+                    with open(file_path, "w") as f:
+                        f.write(grid.to_json())
+                    failures = 0
+                else:
+                    failures += 1
             date -= timedelta(days=1)
-            failures = 0
-            continue
-        if grid := download_crossword_grid(date) is not None:
-            with open(file_path, "w") as f:
-                f.write(json.dumps(grid, cls=GridEncoder))
-            failures = 0
-        else:
-            failures += 1
-        date -= timedelta(days=1)
-        time.sleep(delay)
+            time.sleep(delay)
 
 
 if __name__ == "__main__":
-    pass
+    download_all(1, 10)

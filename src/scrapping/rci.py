@@ -1,4 +1,4 @@
-from data import *
+from data import Grid, Point, Direction, ClueAnswerPair, GridConversionError
 from py_mini_racer import MiniRacer
 from typing import List, Tuple
 import json
@@ -127,8 +127,9 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     ver_down = "b"
     hor_down = "d"
     filled = "z"
-    # y?
+    # y ?
     # z : voir https://www.rcijeux.fr/drupal_game/lci/mfleches/grids/5439.mfj
+    # en fait, c’est plus compliqué, voir : https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_2_3768.mfj (qui ne charge pas)
     for i, line in enumerate(grille):
         j = 0
         while j < width:
@@ -137,6 +138,9 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
                 break
             char = line[j]
             if char in filled:
+                if "".join(grille).count(char) < 5:
+                    raise GridConversionError(f"Bad use of the character {char}")
+                j += 1
                 continue
             if (
                 char
@@ -254,9 +258,9 @@ endpoints = [
     ("https://www.rcijeux.fr/drupal_game/lci/mcroises/grids/{}.mcj", 4783),
     ("https://www.rcijeux.fr/drupal_game/lci/mfleches/grids/{}.mfj", 5439),
     ("https://www.rcijeux.fr/drupal_game/cnews/mfleches/grids/{}.mfj", 1939),
-    ("https://www.rcijeux.fr/drupal_game/cnews/mfleches/grids/{}.mcj", 1939),
+    ("https://www.rcijeux.fr/drupal_game/cnews/mcroises/grids/{}.mcj", 1939),
     ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mcj", 4550),
-    ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mfj", 4550),
+    ("https://www.rcijeux.fr/drupal_game/maxi/mfleches/grids/{}.mfj", 4550),
 ]
 
 
@@ -270,32 +274,47 @@ def download_grid(endpoint: str):
             grid = convert_RCI_crossword_grid(text)
         return grid
     else:
+        print(r.status_code)
         return None
 
 
-def download_all_endpoints(endpoints: List[Tuple[str, int]], delay: float, max_failures: int):
+def download_all_endpoints(
+    endpoints: List[Tuple[str, int]], delay: float, max_failures: int
+):
     for endpoint, end_index in endpoints:
-        provider = endpoint.split("/")[-4]
-        os.makedirs(f"data/grids/{provider}", exist_ok=True)            
+        print(endpoint)
+        provider, type_grid = endpoint.split("/")[4:6]
+        if provider == "notretemps":
+            d = [x for x in endpoint if x.isdigit()][0]
+            type_grid = type_grid + str(d)
+
+        os.makedirs(f"data/grids/{provider}/{type_grid}", exist_ok=True)
         k = end_index
         for offset in (1, -1):
             failures = 0
             while failures < max_failures:
-                file_path = f"data/grids/{provider}/{k}.json"
+                file_path = f"data/grids/{provider}/{type_grid}/{k}.json"
                 if os.path.exists(file_path):
                     k += offset
                     failures = 0
                     continue
-                if grid := download_grid(endpoint.format(k)) is not None:
-                    grids.append((grid, k))
-                    failures = 0
-                    with open(file_path, "w") as f:
-                        f.write(json.dumps(grid, cls=GridEncoder))
-                else:
+                try:
+                    grid = download_grid(endpoint.format(k))
+                    grid.publisher = provider
+                except Exception as e:
+                    print(e, endpoint.format(k))
                     failures += 1
+                else:
+                    if grid is None:
+                        failures += 1
+                    else:
+                        failures = 0
+                        with open(file_path, "w") as f:
+                            f.write(grid.to_json())
                 k += offset
                 time.sleep(delay)
             k = end_index - 1
 
+
 if __name__ == "__main__":
-    pass
+    download_all_endpoints(reversed(endpoints), 1.5, 10)
