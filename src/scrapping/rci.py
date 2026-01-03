@@ -1,4 +1,11 @@
-from data import Grid, Point, Direction, ClueAnswerPair, GridConversionError
+from data import (
+    Grid,
+    Point,
+    Direction,
+    ClueAnswerPair,
+    GridConversionError,
+    GridFilling,
+)
 from py_mini_racer import MiniRacer
 from typing import List, Tuple
 import json
@@ -69,7 +76,7 @@ def convert_RCI_crossword_grid(crossword_grid: str) -> Grid:
     if difficulty:
         difficulty = int(difficulty)
     return Grid(
-        grid_layout=grid_layout,
+        layout=grid_layout,
         clue_answer_pairs=clue_answer_pairs,
         difficulty=difficulty,
     )
@@ -202,15 +209,14 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     grid_layout = []
     for line in grille:
         layout_line = [
-            GridFilling.FREE if char.isupper() else GridFilling.BLOCKED
-            for char in line[0]
+            GridFilling.FREE if char.isupper() else GridFilling.BLOCKED for char in line
         ]
         grid_layout.append(layout_line)
     difficulty = json_crossword_grid.get("force", None)
     if difficulty is not None:
         difficulty = int(difficulty)
     return Grid(
-        grid_layout=grid_layout,
+        layout=grid_layout,
         clue_answer_pairs=clue_answer_pairs,
         difficulty=difficulty,
     )
@@ -290,7 +296,7 @@ def download_all_endpoints(
 
         os.makedirs(f"data/grids/{provider}/{type_grid}", exist_ok=True)
         k = end_index
-        for offset in (1, -1):
+        for offset in (1,):
             failures = 0
             while failures < max_failures:
                 file_path = f"data/grids/{provider}/{type_grid}/{k}.json"
@@ -309,7 +315,7 @@ def download_all_endpoints(
                         failures += 1
                     else:
                         failures = 0
-                        with open(file_path, "w") as f:
+                        with open(file_path, "w", encoding="utf-8") as f:
                             f.write(grid.to_json())
                 k += offset
                 time.sleep(delay)
@@ -317,4 +323,4 @@ def download_all_endpoints(
 
 
 if __name__ == "__main__":
-    download_all_endpoints(reversed(endpoints), 1.5, 10)
+    download_all_endpoints(endpoints, 1, 3)

@@ -1,7 +1,11 @@
 from enum import Enum
-from typing import Optional, List, Any, Dict
+from typing import Optional, List, Any, Dict, Tuple
 import json
 import datetime
+
+# ---------------------------------------------------------
+# UPDATED CLASSES
+# ---------------------------------------------------------
 
 
 class GridFilling(Enum):
@@ -10,10 +14,14 @@ class GridFilling(Enum):
 
     @classmethod
     def from_char(cls, char: str):
-        return cls.BLOCKED if char == "#" else cls.FREE
+        # We accept both old format (.) and new format (space) for compatibility during migration
+        if char in ["#", "@"]:
+            return cls.BLOCKED
+        return cls.FREE
 
     def to_char(self):
-        return "#" if self == self.BLOCKED else "."
+        # New visual style
+        return "@" if self == self.BLOCKED else " "
 
 
 class Direction(Enum):
@@ -55,15 +63,10 @@ class ClueAnswerPair:
         self.direction = direction
 
     def to_dict(self):
-        # We flatten the structure for readability.
-        # 'end' is technically redundant if we have start+len+direction,
-        # but we keep it for validation if you prefer.
         return {
             "d": self.direction.to_code(),
             "xy": self.start.to_list(),
-            "len": len(
-                self.answer
-            ),  # Easier for humans to scan length than calc end coords
+            "len": len(self.answer),
             "clue": self.clue,
             "ans": self.answer,
         }
@@ -72,30 +75,94 @@ class ClueAnswerPair:
     def from_dict(cls, data: Dict[str, Any]):
         start = Point.from_list(data["xy"])
         direction = Direction.from_code(data["d"])
-
-        # Reconstruct End point based on length and direction
         length = data.get("len", len(data["ans"]))
+
         if direction == Direction.HORIZONTAL:
             end = Point(start.y, start.x + length - 1)
         else:
             end = Point(start.y + length - 1, start.x)
 
-        return cls(
-            clue=data["clue"],
-            answer=data["ans"],
-            start=start,
-            end=end,
-            direction=direction,
-        )
+        return cls(data["clue"], data["ans"], start, end, direction)
 
-    def __repr__(self):
-        return f"{self.clue} -> {self.answer}"
+
+class GridFilling(Enum):
+    FREE = 0
+    BLOCKED = 1
+
+    @classmethod
+    def from_char(cls, char: str):
+        # Support old (#) and new (@) blocked characters
+        if char in ["#", "@"]:
+            return cls.BLOCKED
+        return cls.FREE
+
+    def to_char(self):
+        # New visual style: @ for block, Space for free
+        return "@" if self == self.BLOCKED else " "
+
+
+class Direction(Enum):
+    HORIZONTAL = 0
+    VERTICAL = 1
+
+    def to_code(self):
+        return "H" if self == self.HORIZONTAL else "V"
+
+    @classmethod
+    def from_code(cls, code: str):
+        return cls.HORIZONTAL if code == "H" else cls.VERTICAL
+
+
+class Point:
+    def __init__(self, y: int, x: int):
+        self.y = y
+        self.x = x
+
+    def to_list(self):
+        return [self.y, self.x]
+
+    @staticmethod
+    def from_list(data: List[int]):
+        return Point(data[0], data[1])
+
+
+class ClueAnswerPair:
+    def __init__(
+        self, clue: str, answer: str, start: Point, end: Point, direction: Direction
+    ):
+        self.clue = clue
+        self.answer = answer
+        self.start = start
+        self.end = end
+        self.direction = direction
+
+    def to_dict(self):
+        return {
+            "d": self.direction.to_code(),
+            "xy": self.start.to_list(),
+            "len": len(self.answer),
+            "clue": self.clue,
+            "ans": self.answer,
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]):
+        start = Point.from_list(data["xy"])
+        direction = Direction.from_code(data["d"])
+        length = data.get("len", len(data["ans"]))
+
+        if direction == Direction.HORIZONTAL:
+            end = Point(start.y, start.x + length - 1)
+        else:
+            end = Point(start.y + length - 1, start.x)
+
+        return cls(data["clue"], data["ans"], start, end, direction)
 
 
 class Grid:
     def __init__(
         self,
-        grid_layout: List[List[GridFilling]],
+        layout: List[List[GridFilling]],
         clue_answer_pairs: List[ClueAnswerPair],
         publisher: Optional[str] = None,
         publishing_date: Optional[datetime.date] = None,
@@ -110,23 +177,19 @@ class Grid:
         self.source = source
         self.difficulty = difficulty
         self.title = title
-        self.grid_layout = grid_layout
+        self.layout = layout
         self.clue_answer_pairs = clue_answer_pairs
-        self.title = title
 
     def to_json(self, indent=2):
-        """Produces a human-readable JSON string."""
-
-        # 1. Convert Layout to Visual ASCII
+        # 1. Layout to Visual Strings
         layout_visual = []
-        for row in self.grid_layout:
+        for row in self.layout:
             row_str = "".join([cell.to_char() for cell in row])
             layout_visual.append(row_str)
 
-        # 2. Convert Clues
+        # 2. Clues
         clues_data = [c.to_dict() for c in self.clue_answer_pairs]
 
-        # 3. Build Final Dict
         data = {
             "meta": {
                 "title": self.title,
@@ -139,31 +202,46 @@ class Grid:
                 "source": self.source,
             },
             "layout": layout_visual,
-            "clues": clues_data,
+            # RENAMED FIELD
+            "clue_answer_pairs": clues_data,
         }
-        return json.dumps(data, indent=indent)
+        # ensure_ascii=False ensures UTF-8 chars like é are written literally, not as \u00e9
+        return json.dumps(data, indent=indent, ensure_ascii=False)
 
     @classmethod
     def from_json(cls, json_str: str):
-        data = json.loads(json_str)
+        # Handle double-encoded strings
+        if isinstance(json_str, str):
+            try:
+                data = json.loads(json_str)
+                if isinstance(data, str):
+                    data = json.loads(data)
+            except json.JSONDecodeError:
+                raise ValueError("Invalid JSON string")
+        else:
+            data = json_str
+
         meta = data.get("meta", {})
 
-        # 1. Parse Layout
-        grid_layout = []
-        for row_str in data["layout"]:
+        # Parse Layout
+        layout = []
+        for row_str in data.get("layout", []):
             grid_row = [GridFilling.from_char(char) for char in row_str]
-            grid_layout.append(grid_row)
+            layout.append(grid_row)
 
-        # 2. Parse Clues
-        clue_pairs = [ClueAnswerPair.from_dict(c) for c in data["clues"]]
+        # COMPATIBILITY: Look for "clue_answer_pairs", fallback to "clues"
+        raw_clues = data.get("clue_answer_pairs")
+        if raw_clues is None:
+            raw_clues = data.get("clues", [])
 
-        # 3. Parse Date
+        clue_pairs = [ClueAnswerPair.from_dict(c) for c in raw_clues]
+
         p_date = meta.get("date")
         if p_date:
             p_date = datetime.date.fromisoformat(p_date)
 
         return cls(
-            grid_layout=grid_layout,
+            layout=layout,
             clue_answer_pairs=clue_pairs,
             publisher=meta.get("publisher"),
             publishing_date=p_date,
@@ -172,3 +250,7 @@ class Grid:
             difficulty=meta.get("difficulty"),
             title=meta.get("title"),
         )
+
+
+class GridConversionError(Exception):
+    pass

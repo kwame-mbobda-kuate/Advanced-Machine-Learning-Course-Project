@@ -10,3 +10,5 @@ wheels/
 .venv
 
 data/grids
+data/train_test_val
+data/list_clue_answers

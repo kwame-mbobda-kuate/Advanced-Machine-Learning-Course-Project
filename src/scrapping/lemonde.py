@@ -2,8 +2,8 @@ from data import Grid, GridFilling, Direction, ClueAnswerPair, Point
 import requests
 import os
 import time
-from datetime import datetime, timedelta
 import json
+from datetime import datetime, timedelta
 
 with open("data/queries/le_monde_query.txt", "r") as f:
     query = f.read()
@@ -34,9 +34,7 @@ def convert_lemonde_crosssword_grid(crossword_grid: dict) -> Grid:
                 grid_layout[i][start.x] = GridFilling.FREE
         clue_answer_pair = ClueAnswerPair(clue, answer, start, end, direction)
         clue_answer_pairs.append(clue_answer_pair)
-    return Grid(
-        author=author, grid_layout=grid_layout, clue_answer_pairs=clue_answer_pairs
-    )
+    return Grid(author=author, layout=grid_layout, clue_answer_pairs=clue_answer_pairs)
 
 
 def download_crossword_grid(date: datetime, type_grid: str) -> Grid:
@@ -73,7 +71,7 @@ def download_all(delay: float, max_failures: int):
                 failures += 1
             else:
                 if grid is not None:
-                    with open(file_path, "w") as f:
+                    with open(file_path, "w", encoding="utf-8") as f:
                         f.write(grid.to_json())
                     failures = 0
                 else:
