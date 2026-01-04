@@ -15,8 +15,8 @@ from collections import defaultdict
 def get_dataset_splits(
     json_dir: str,
     csv_dir: str,
-    train_ratio: float = 0.7,
-    val_ratio: float = 0.1,  # For the Neural Network (Early Stopping)
+    train_ratio: float = 0.79,
+    val_ratio: float = 0.01,  # For the Neural Network (Early Stopping)
     calibration_ratio: float = 0.1,  # For the Solver (Hyperparameters)
     test_ratio: float = 0.1,  # For Final Reporting
     seed: int = 42,
@@ -199,7 +199,7 @@ def extract_pairs_from_split(file_list: List[Path]) -> Dict[str, List[str]]:
                 answers.append(answer_clean)
                 clue_answer_pairs.add((clue_clean, answer_clean))
 
-    return {"clues": clues, "answers": answers}
+    return {"clue": clues, "answer": answers}
 
 
 if __name__ == "__main__":
@@ -214,4 +214,4 @@ if __name__ == "__main__":
             f.write("\n".join(str(x) for x in split))
     for mode, split in splits.items():
         df = pd.DataFrame(extract_pairs_from_split(split))
-        df.to_csv(output_dir + f"/{mode}_pairs-00000-of-00001.csv")
+        df.to_parquet(output_dir + f"/{mode}-00000-of-00001.parquet")

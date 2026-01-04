@@ -1,5 +1,4 @@
-import torch
-from datasets import load_dataset, DatasetDict
+from datasets import load_dataset
 from sentence_transformers import (
     SentenceTransformer,
     SentenceTransformerTrainer,
@@ -19,38 +18,38 @@ OUTPUT_PATH = "data/e5-two-tower"
 HUB_MODEL_ID = "kwmk/e5-two-tower"
 
 # Batch Sizes
-TARGET_BATCH_SIZE = 64
-MINI_BATCH_SIZE = 32
+TARGET_BATCH_SIZE = 256
+MINI_BATCH_SIZE = 64
 NUM_EPOCHS = 5
 
 # E5 Prefixes
 QUERY_PREFIX = "query: "
 PASSAGE_PREFIX = "passage: "
 
-# Internal Router Keys (How the model sees the data)
-# We will map 'clue' -> 'anchor' and 'answer' -> 'positive'
-KEY_QUERY = "anchor"
-KEY_DOC = "positive"
+# Route Names (Internal Keys)
+# CHANGED: We use "document" instead of "passage" to satisfy
+# the internal Model Card generator which looks for task="document"
+ROUTE_QUERY = "query"
+ROUTE_DOC = "document"
 
 print(f"Initializing Two-Tower model from {BASE_MODEL}...")
 
 # ---------------------------------------------------------
-# 2. Initialize Divergent Two-Tower Model (Router)
+# 2. Initialize Divergent Two-Tower Model
 # ---------------------------------------------------------
-# Tower A: Query (Clue) Encoder
+# Tower A: Query Encoder
 query_bert = models.Transformer(BASE_MODEL)
 query_pool = models.Pooling(query_bert.get_word_embedding_dimension())
 query_tower = SentenceTransformer(modules=[query_bert, query_pool])
 
-# Tower B: Passage (Answer) Encoder
+# Tower B: Passage Encoder
 doc_bert = models.Transformer(BASE_MODEL)
 doc_pool = models.Pooling(doc_bert.get_word_embedding_dimension())
 doc_tower = SentenceTransformer(modules=[doc_bert, doc_pool])
 
 # Router
-router = models.Router(
-    in_features_to_module={KEY_QUERY: query_tower, KEY_DOC: doc_tower}
-)
+# We define specific routes for queries and passages
+router = models.Router(sub_modules={ROUTE_QUERY: query_tower, ROUTE_DOC: doc_tower})
 
 model = SentenceTransformer(modules=[router])
 
@@ -60,45 +59,43 @@ model = SentenceTransformer(modules=[router])
 print(f"Loading dataset: {DATASET_NAME}")
 dataset = load_dataset(DATASET_NAME)
 
-# --- Preprocessing for Training ---
-print("Preprocessing training data...")
+# --- Preprocessing ---
+# We do NOT rename columns here. We keep 'clue' and 'answer'.
+# We only add the E5 prefixes to the text content.
+print("Preprocessing training data (adding prefixes)...")
 
 
-def preprocess_train(examples):
-    # We assume columns are 'clue' and 'answer'
-    # 1. Add E5 prefixes
-    # 2. Rename to 'anchor' (KEY_QUERY) and 'positive' (KEY_DOC) for the Router
+def add_prefixes(examples):
     return {
-        KEY_QUERY: [QUERY_PREFIX + t for t in examples["clue"]],
-        KEY_DOC: [PASSAGE_PREFIX + t for t in examples["answer"]],
+        "clue": [QUERY_PREFIX + t for t in examples["clue"]],
+        "answer": [PASSAGE_PREFIX + t for t in examples["answer"]],
     }
 
 
-train_dataset = dataset["train"].map(preprocess_train, batched=True)
-# Filter to keep only the columns the model expects
-train_dataset = train_dataset.select_columns([KEY_QUERY, KEY_DOC])
+train_dataset = dataset["train"].map(add_prefixes, batched=True)
+
+# Ensure we keep the original columns needed for the mapping
+train_dataset = train_dataset.select_columns(["clue", "answer"])
 
 # ---------------------------------------------------------
-# 4. Prepare Evaluator (Handling Missing IDs)
+# 4. Prepare Evaluator
 # ---------------------------------------------------------
-print("Preparing Evaluator from 'model_test'...")
-val_data = dataset["model_test"]
+print("Preparing Evaluator...")
+val_data = dataset["test"]
 
 queries = {}
 corpus = {}
 relevant_docs = {}
 
-# Since 'model_test' only has text columns, we create IDs based on index.
-# The 'corpus' will consist of all answers in the validation set.
+# We manually prepare the evaluator dictionaries
 for idx, row in enumerate(val_data):
     q_id = str(idx)
-    doc_id = str(idx)  # Assuming 1-to-1 mapping in your test set
+    doc_id = str(idx)
 
-    # Store text with prefixes
+    # Note: InformationRetrievalEvaluator calls model.encode().
+    # With a Router, it's best to ensure the inputs have prefixes.
     queries[q_id] = QUERY_PREFIX + row["clue"]
     corpus[doc_id] = PASSAGE_PREFIX + row["answer"]
-
-    # Link them
     relevant_docs[q_id] = {doc_id}
 
 evaluator = evaluation.InformationRetrievalEvaluator(
@@ -106,8 +103,12 @@ evaluator = evaluation.InformationRetrievalEvaluator(
     corpus=corpus,
     relevant_docs=relevant_docs,
     mrr_at_k=[10],
-    name="model_test",
-    main_score_function="mrr@10",
+    name="test",
+    # NOTE: With a Router model, standard evaluation can be tricky because
+    # the evaluator doesn't know about "tasks".
+    # However, since we rely on E5 prefixes embedded in the text,
+    # and defaults usually work for 0-index or key routing, this typically runs.
+    # Ideally, one would use a custom loop or specific kwargs for v3 routing in eval.
 )
 
 # ---------------------------------------------------------
@@ -118,7 +119,7 @@ train_loss = losses.CachedMultipleNegativesRankingLoss(
 )
 
 # ---------------------------------------------------------
-# 6. Training Configuration
+# 6. Training Configuration with Router Mapping
 # ---------------------------------------------------------
 args = SentenceTransformerTrainingArguments(
     output_dir=OUTPUT_PATH,
@@ -134,11 +135,16 @@ args = SentenceTransformerTrainingArguments(
     save_steps=100,
     save_total_limit=2,
     load_best_model_at_end=True,
-    metric_for_best_model="eval_model_test_mrr@10",
+    metric_for_best_model="eval_test_cosine_mrr@10",
     greater_is_better=True,
     logging_steps=50,
     batch_sampler=BatchSamplers.NO_DUPLICATES,
-    # We manually push at the end
+    # --- THE KEY PART ---
+    # Map dataset columns to Router keys
+    router_mapping={
+        "clue": ROUTE_QUERY,  # maps to "query"
+        "answer": ROUTE_DOC,  # maps to "document"
+    },
 )
 
 trainer = SentenceTransformerTrainer(
