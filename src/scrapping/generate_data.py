@@ -13,59 +13,55 @@ from collections import defaultdict
 
 
 def get_dataset_splits(
-    json_root_dir: str,
-    csv_root_dir: str,
-    train_ratio: float = 0.8,
-    val_ratio: float = 0.1,
-    test_ratio: float = 0.1,
+    json_dir: str,
+    csv_dir: str,
+    train_ratio: float = 0.7,
+    val_ratio: float = 0.1,  # For the Neural Network (Early Stopping)
+    calibration_ratio: float = 0.1,  # For the Solver (Hyperparameters)
+    test_ratio: float = 0.1,  # For Final Reporting
     seed: int = 42,
 ) -> Dict[str, List[Path]]:
     """
-    Scans the directory for .json and .csv files, shuffles them,
-    and splits them into train, validation, and test sets.
-
-    Args:
-        root_dir: Path to the dataset folder.
-        train_ratio: Proportion of files for training.
-        val_ratio: Proportion of files for validation.
-        test_ratio: Proportion of files for testing.
-        seed: Random seed for reproducibility.
-
-    Returns:
-        Dictionary with keys 'train', 'val', 'test', containing lists of Path objects.
+    Splits data into 4 sets: Train, Val, Calibration, Test.
     """
 
-    # 2. Gather all files
-    json_root_dir = Path(json_root_dir)
-    csv_root_dir = Path(csv_root_dir)
-    # Search recursively for json and csv
-    all_files = list(json_root_dir.rglob("*.json")) + list(csv_root_dir.rglob("*.csv"))
+    # 1. Validate ratios
+    total_ratio = train_ratio + val_ratio + calibration_ratio + test_ratio
+    if not (0.99 <= total_ratio <= 1.01):
+        raise ValueError(f"Ratios must sum to 1.0. Got {total_ratio}")
+
+    # 2. Gather files
+    json_root = Path(json_dir)
+    csv_root = Path(csv_dir)
+    all_files = list(json_root.rglob("*.json")) + list(csv_root.rglob("*.csv"))
 
     if not all_files:
-        print(f"No .json or .csv files found in {json_root_dir} and {csv_root_dir}")
-        return {"train": [], "val": [], "test": []}
+        return {"train": [], "val": [], "calibration": [], "test": []}
 
-    print(f"Found {len(all_files)} total files.")
-
-    # 3. Shuffle (Reproducible)
+    # 3. Shuffle
     random.seed(seed)
     random.shuffle(all_files)
 
-    # 4. Calculate Cut Points
+    # 4. Calculate Indices
     n = len(all_files)
-    train_end = int(n * train_ratio)
-    val_end = train_end + int(n * val_ratio)
+    idx_train = int(n * train_ratio)
+    idx_val = idx_train + int(n * val_ratio)
+    idx_cal = idx_val + int(n * calibration_ratio)
 
     # 5. Split
     splits = {
-        "train": all_files[:train_end],
-        "val": all_files[train_end:val_end],
-        "test": all_files[val_end:],
+        "train": all_files[:idx_train],
+        "val": all_files[idx_train:idx_val],
+        "calibration": all_files[idx_val:idx_cal],
+        "test": all_files[idx_cal:],
     }
 
-    print(
-        f"Split: Train={len(splits['train'])}, Val={len(splits['val'])}, Test={len(splits['test'])}"
-    )
+    print(f"Total: {n}")
+    print(f"Train:       {len(splits['train'])} (Model Weights)")
+    print(f"Validation:  {len(splits['val'])} (Model Early Stopping)")
+    print(f"Calibration: {len(splits['calibration'])} (Solver Tuning)")
+    print(f"Test:        {len(splits['test'])} (Final Metric)")
+
     return splits
 
 
@@ -145,7 +141,7 @@ def normalize_clue(clue: str) -> str:
 
 
 def normalize_answer(ans: str) -> str:
-    ans = ans.replace("’", "'").replace("‘", "'").replace(" ", "")
+    ans = ans.replace("’", "'").replace("‘", "'").replace(" ", "").replace("-", "")
     ans = ans.upper()
     return "".join(unicodedata.normalize("NFKD", ans))
 
@@ -218,4 +214,4 @@ if __name__ == "__main__":
             f.write("\n".join(str(x) for x in split))
     for mode, split in splits.items():
         df = pd.DataFrame(extract_pairs_from_split(split))
-        df.to_csv(output_dir + f"/{mode}_clue_answer_pairs.csv")
+        df.to_csv(output_dir + f"/{mode}_pairs-00000-of-00001.csv")

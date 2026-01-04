@@ -5,7 +5,7 @@ import time
 import json
 from datetime import datetime, timedelta
 
-with open("data/queries/le_monde_query.txt", "r") as f:
+with open("src/scrapping/le_monde_query.txt", "r") as f:
     query = f.read()
 
 
@@ -81,4 +81,4 @@ def download_all(delay: float, max_failures: int):
 
 
 if __name__ == "__main__":
-    download_all(1, 10)
+    download_all(1, 5)

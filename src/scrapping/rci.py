@@ -222,53 +222,6 @@ def convert_RCI_arrow_crossword_grid(crossword_grid: str):
     )
 
 
-endpoints = [
-    ("https://www.rcijeux.fr/drupal_game/lacroix/mcroises1/grids/gary{}.mcj", 8779),
-    ("https://www.rcijeux.fr/drupal_game/lacroix/mcroises3/grids/olivier{}.mcj", 311),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_4_{}.mcj",
-        1423,
-    ),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_3_{}.mcj",
-        1423,
-    ),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_2_{}.mcj",
-        1423,
-    ),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mcroises/grids/mcroises_1_{}.mcj",
-        1423,
-    ),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_4_{}.mfj",
-        3789,
-    ),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_3_{}.mfj",
-        3789,
-    ),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_2_{}.mfj",
-        3789,
-    ),
-    (
-        "https://www.rcijeux.fr/drupal_game/notretemps/mfleches/grids/mfleches_1_{}.mfj",
-        3789,
-    ),
-    ("https://www.rcijeux.fr/drupal_game/lebelage/mfleches/grids/{}.mfj", 1442),
-    ("https://www.rcijeux.fr/drupal_game/lebelage/mcroises/grids/{}.mcj", 1442),
-    ("https://www.rcijeux.fr/drupal_game/nrco/mfleches/grids/{}.mfj", 2002),
-    ("https://www.rcijeux.fr/drupal_game/nrco/mcroises/grids/{}.mcj", 2002),
-    ("https://www.rcijeux.fr/drupal_game/lci/mcroises/grids/{}.mcj", 4783),
-    ("https://www.rcijeux.fr/drupal_game/lci/mfleches/grids/{}.mfj", 5439),
-    ("https://www.rcijeux.fr/drupal_game/cnews/mfleches/grids/{}.mfj", 1939),
-    ("https://www.rcijeux.fr/drupal_game/cnews/mcroises/grids/{}.mcj", 1939),
-    ("https://www.rcijeux.fr/drupal_game/maxi/mcroises/grids/{}.mcj", 4550),
-    ("https://www.rcijeux.fr/drupal_game/maxi/mfleches/grids/{}.mfj", 4550),
-]
-
 
 def download_grid(endpoint: str):
     r = requests.get(endpoint)
@@ -296,7 +249,7 @@ def download_all_endpoints(
 
         os.makedirs(f"data/grids/{provider}/{type_grid}", exist_ok=True)
         k = end_index
-        for offset in (1,):
+        for offset in (1, -1):
             failures = 0
             while failures < max_failures:
                 file_path = f"data/grids/{provider}/{type_grid}/{k}.json"
@@ -323,4 +276,6 @@ def download_all_endpoints(
 
 
 if __name__ == "__main__":
-    download_all_endpoints(endpoints, 1, 3)
+    with open("src/scrapping/endpoints.json", "r") as f:
+        endpoints = json.load(f)
+        download_all_endpoints([endpoints[-1]], 0.5, 3)
