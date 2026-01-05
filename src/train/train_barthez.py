@@ -1,9 +1,8 @@
-import torch
 import numpy as np
 from datasets import load_dataset
 from transformers import (
     AutoTokenizer,
-    T5ForConditionalGeneration,
+    AutoModelForSeq2SeqLM,
     DataCollatorForSeq2Seq,
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
@@ -13,19 +12,20 @@ from transformers import (
 # 1. Configuration
 # ---------------------------------------------------------
 DATASET_NAME = "kwmk/CrosswordClueAnswers"
-MODEL_ID = "google/byt5-small"
+MODEL_ID = "moussaKam/barthez"
 OUTPUT_DIR = "data/byt5"
 HUB_MODEL_ID = "kwmk/byt5"
 
 # Hyperparameters
-BATCH_SIZE = 16  # ByT5 sequences are longer (bytes), so we keep batch size moderate
-NUM_EPOCHS = 5  # Generative models often converge faster than retrievers
-LEARNING_RATE = 8e-4  # T5 models often like slightly higher LR (e.g. 3e-4 to 1e-3)
+TRAIN_BATCH_SIZE = 512
+EVAL_BATCH_SIZE = 1024
+NUM_EPOCHS = 10  # Generative models often converge faster than retrievers
+LEARNING_RATE = 4e-5
 
 # Max lengths (in Bytes/Characters)
 # ByT5 uses roughly 1 token per character.
-MAX_INPUT_LENGTH = 512  # Max length for the Clue
-MAX_TARGET_LENGTH = 128  # Max length for the Answer
+MAX_INPUT_LENGTH = 32  # Max length for the Clue
+MAX_TARGET_LENGTH = 16  # Max length for the Answer
 
 print(f"Loading Model: {MODEL_ID}...")
 
@@ -36,7 +36,7 @@ print(f"Loading Model: {MODEL_ID}...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 
 # Load the T5 model for conditional generation (Seq2Seq)
-model = T5ForConditionalGeneration.from_pretrained(MODEL_ID)
+model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_ID)
 
 # ---------------------------------------------------------
 # 3. Load and Preprocess Data
@@ -47,26 +47,13 @@ dataset = load_dataset(DATASET_NAME)
 
 # Preprocessing function
 def preprocess_function(examples):
-    # T5 models usually work best with a task prefix, though ByT5 is flexible.
-    # We format inputs as "clue: <clue_text>"
-    inputs = [f"clue: {clue}" for clue in examples["clue"]]
-    targets = [str(answer) for answer in examples["answer"]]
+    inputs = examples["clue"]
+    targets = [str(t).lower() for t in examples["answer"]]
 
-    # Tokenize inputs
-    model_inputs = tokenizer(
-        inputs,
-        max_length=MAX_INPUT_LENGTH,
-        truncation=True,
-        padding=False,  # We pad dynamically in the collator
-    )
+    model_inputs = tokenizer(inputs, max_length=MAX_INPUT_LENGTH, truncation=True)
 
-    # Tokenize targets (labels)
-    # modern transformers use `text_target` argument
     labels = tokenizer(
-        text_target=targets,
-        max_length=MAX_TARGET_LENGTH,
-        truncation=True,
-        padding=False,
+        text_target=targets, max_length=MAX_TARGET_LENGTH, truncation=True
     )
 
     model_inputs["labels"] = labels["input_ids"]
@@ -86,6 +73,18 @@ tokenized_datasets = dataset.map(
 # We define a simple "Exact Match" accuracy
 
 
+def equal_chars(s1, s2):
+    m = min(len(s1), len(s2))
+    M = max(len(s2), len(s2))
+    if M == 0:
+        return 0
+    return sum(s1[i] == s2[i] for i in range(m)) / M
+
+
+def normalize(s):
+    return "".join(filter(str.isalpha, s.lower()))
+
+
 def compute_metrics(eval_preds):
     preds, labels = eval_preds
 
@@ -100,11 +99,11 @@ def compute_metrics(eval_preds):
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
     # Simple post-processing
-    decoded_preds = [pred.strip() for pred in decoded_preds]
-    decoded_labels = [label.strip() for label in decoded_labels]
+    decoded_preds = [normalize(pred) for pred in decoded_preds]
+    decoded_labels = [normalize(label) for label in decoded_labels]
 
     # Calculate Exact Match Accuracy
-    matches = [1 if p == l else 0 for p, l in zip(decoded_preds, decoded_labels)]
+    matches = [equal_chars(p, l) for p, l in zip(decoded_preds, decoded_labels)]
     accuracy = sum(matches) / len(matches)
 
     return {"accuracy": accuracy}
@@ -118,22 +117,21 @@ data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
 args = Seq2SeqTrainingArguments(
     output_dir=OUTPUT_DIR,
-    evaluation_strategy="steps",
-    eval_steps=500,
+    eval_strategy="steps",
+    eval_steps=200,
     save_strategy="steps",
-    save_steps=500,
-    logging_steps=100,
+    save_steps=200,
+    logging_steps=50,
     learning_rate=LEARNING_RATE,
-    per_device_train_batch_size=BATCH_SIZE,
-    per_device_eval_batch_size=BATCH_SIZE,
-    save_total_limit=2,
+    per_device_train_batch_size=TRAIN_BATCH_SIZE,
+    per_device_eval_batch_size=EVAL_BATCH_SIZE,
     num_train_epochs=NUM_EPOCHS,
-    predict_with_generate=True,  # Crucial for calculating metrics during eval
-    fp16=True,  # Faster training on GPU
+    predict_with_generate=True,
+    fp16=True,
+    save_total_limit=2,
     load_best_model_at_end=True,
     metric_for_best_model="accuracy",
     greater_is_better=True,
-    # Generation config for evaluation
     generation_max_length=MAX_TARGET_LENGTH,
 )
 
@@ -141,7 +139,7 @@ trainer = Seq2SeqTrainer(
     model=model,
     args=args,
     train_dataset=tokenized_datasets["train"],
-    eval_dataset=tokenized_datasets["model_test"],
+    eval_dataset=tokenized_datasets["val"],
     data_collator=data_collator,
     tokenizer=tokenizer,
     compute_metrics=compute_metrics,
