@@ -141,9 +141,9 @@ def normalize_clue(clue: str) -> str:
 
 
 def normalize_answer(ans: str) -> str:
-    ans = ans.replace("’", "'").replace("‘", "'").replace(" ", "").replace("-", "")
-    ans = ans.upper()
-    return "".join(unicodedata.normalize("NFKD", ans))
+    return "".join(
+        filter(str.isalpha, unicodedata.normalize("NFD", ans.upper()))
+    ).replace("Œ", "OE")
 
 
 def extract_pairs_from_split(file_list: List[Path]) -> Dict[str, List[str]]:

@@ -1,16 +1,8 @@
 from data import Grid
 import json
 import shutil
+from pathlib import Path
 
-# Chemin complet vers le fichier JSON
-file_path = r"C:\Users\tbonn\OneDrive\Bureau\projet ml\Advanced-Machine-Learning-Course-Project\src\scrapping\1195.json"
-
-# Lire le fichier et le convertir en objet Python
-with open(file_path, "r", encoding="utf-8") as f:
-    data = json.load(f)  # data sera un dict ou une liste selon le JSON
-
-# Grid.from_json gère ton format moderne
-grid_obj = Grid.from_json(data)
 
 
 def grid_to_crossword(grid_obj):
@@ -59,31 +51,21 @@ def grid_to_crossword(grid_obj):
             if cell in ("@", ","):
                 row.append("BLACK")
             else:
-                row.append([
-                    number_grid[y][x],
-                    letter_grid[y][x]
-                ])
+                row.append([number_grid[y][x], letter_grid[y][x]])
         grid.append(row)
 
     # 3️⃣ Format final EXACT attendu
     return {
-        "metadata": {
-            "date": None,
-            "rows": height,
-            "cols": width
-        },
-        "clues": {
-            "across": across,
-            "down": down
-        },
-        "grid": grid
+        "metadata": {"date": None, "rows": height, "cols": width},
+        "clues": {"across": across, "down": down},
+        "grid": grid,
     }
 
-print(grid_to_crossword(grid_obj))
 
 
 
 """Pour corriger les grilles de mots croiser apres scrapping"""
+
 
 def word_fits(layout, word, x, y, direction):
     """
@@ -91,8 +73,10 @@ def word_fits(layout, word, x, y, direction):
     """
     height = len(layout)
     width = len(layout[0])
-
+    
+    word = filter(str.isalpha, word)
     for i, letter in enumerate(word):
+        letter = strip_accents(letter.upper())
         if direction == "H":
             xi, yi = x + i, y
         elif direction == "V":
@@ -114,36 +98,25 @@ def word_fits(layout, word, x, y, direction):
 
     return True
 
+
 def validate_grid(layout, clue_answer_pairs):
     """
     Vérifie si toute la grille est cohérente.
     """
     for entry in clue_answer_pairs:
         if not word_fits(
-            layout,
-            entry["ans"],
-            entry["xy"][0],
-            entry["xy"][1],
-            entry["d"]
+            layout, entry["ans"], entry["xy"][0], entry["xy"][1], entry["d"]
         ):
             return False
     return True
 
+
 def test_xy_permutations(layout, clues):
     cases = {
         "aucune": lambda c: c,
-        "swap_H": lambda c: {
-            **c,
-            "xy": c["xy"][::-1]
-        } if c["d"] == "H" else c,
-        "swap_V": lambda c: {
-            **c,
-            "xy": c["xy"][::-1]
-        } if c["d"] == "V" else c,
-        "swap_HV": lambda c: {
-            **c,
-            "xy": c["xy"][::-1]
-        }
+        "swap_H": lambda c: {**c, "xy": c["xy"][::-1]} if c["d"] == "H" else c,
+        "swap_V": lambda c: {**c, "xy": c["xy"][::-1]} if c["d"] == "V" else c,
+        "swap_HV": lambda c: {**c, "xy": c["xy"][::-1]},
     }
 
     for name, transform in cases.items():
@@ -154,27 +127,27 @@ def test_xy_permutations(layout, clues):
 
     return None, None
 
+
 def fix_scraped_grid(data):
     mode, corrected_clues = test_xy_permutations(
-        data["layout"],
-        data["clue_answer_pairs"]
+        data["layout"], data["clue_answer_pairs"]
     )
 
     if not corrected_clues:
         raise ValueError("Aucune permutation valide trouvée")
 
-    data["meta"]["scrape_fix"] = mode
+    # data["meta"]["scrape_fix"] = mode
     data["clue_answer_pairs"] = corrected_clues
 
     return data
+
 
 def overwrite_with_backup(path):
     shutil.copy(path, path + ".bak")
 
     with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f) 
-    
-    data=fix_scraped_grid(data)
-    print(data["clue_answer_pairs"])
+        data = json.load(f)
+
+    data = fix_scraped_grid(data)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)

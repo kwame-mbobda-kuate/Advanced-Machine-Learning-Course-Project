@@ -1,5 +1,6 @@
 from solver.Utils import clean
 
+
 class Crossword:
     """
     This class defines a crossword datastructure which stores a puzzle solution and contains maps between words,
@@ -14,16 +15,27 @@ class Crossword:
         self.number_grid (list): 2D array with numbers representing beginnings of clues
         self.variables (dict): mapping from clues to gold answers, cells, and intersecting clues
     """
+
     def __init__(self, data):
         self.initialize_grids(grid=data["grid"])
         self.initialize_clues(clues=data["clues"])
         self.initialize_variables()
 
     def initialize_grids(self, grid):
-        self.letter_grid = [[grid[j][i][1] if type(grid[j][i]) == list else "" for i in
-                             range(len(grid[0]))] for j in range(len(grid))]
-        self.number_grid = [[grid[j][i][0] if type(grid[j][i]) == list else "" for i in
-                             range(len(grid[0]))] for j in range(len(grid))]
+        self.letter_grid = [
+            [
+                grid[j][i][1] if type(grid[j][i]) == list else ""
+                for i in range(len(grid[0]))
+            ]
+            for j in range(len(grid))
+        ]
+        self.number_grid = [
+            [
+                grid[j][i][0] if type(grid[j][i]) == list else ""
+                for i in range(len(grid[0]))
+            ]
+            for j in range(len(grid))
+        ]
         self.grid_cells = {}
 
     def initialize_clues(self, clues):
@@ -46,14 +58,21 @@ class Crossword:
             if word_id in self.variables:
                 self.variables[word_id]["cells"].append(cell)
             else:
-                self.variables[word_id] = {"clue": clue, "gold": answer, "cells": [cell], "crossing": []}
+                self.variables[word_id] = {
+                    "clue": clue,
+                    "gold": answer,
+                    "cells": [cell],
+                    "crossing": [],
+                }
 
     def initialize_crossing(self):
         for word_id in self.variables:
             cells = self.variables[word_id]["cells"]
             crossing_ids = []
             for cell in cells:
-                crossing_ids += list(filter(lambda x: x!= word_id, self.grid_cells[cell]))
+                crossing_ids += list(
+                    filter(lambda x: x != word_id, self.grid_cells[cell])
+                )
             self.variables[word_id]["crossing"] = crossing_ids
 
     def initialize_variables(self):

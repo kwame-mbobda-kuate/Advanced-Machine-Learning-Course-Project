@@ -3,87 +3,6 @@ from typing import Optional, List, Any, Dict, Tuple
 import json
 import datetime
 
-# ---------------------------------------------------------
-# UPDATED CLASSES
-# ---------------------------------------------------------
-
-
-class GridFilling(Enum):
-    FREE = 0
-    BLOCKED = 1
-
-    @classmethod
-    def from_char(cls, char: str):
-        # We accept both old format (.) and new format (space) for compatibility during migration
-        if char in ["#", "@"]:
-            return cls.BLOCKED
-        return cls.FREE
-
-    def to_char(self):
-        # New visual style
-        return "@" if self == self.BLOCKED else " "
-
-
-class Direction(Enum):
-    HORIZONTAL = 0
-    VERTICAL = 1
-
-    def to_code(self):
-        return "H" if self == self.HORIZONTAL else "V"
-
-    @classmethod
-    def from_code(cls, code: str):
-        return cls.HORIZONTAL if code == "H" else cls.VERTICAL
-
-
-class Point:
-    def __init__(self, y: int, x: int):
-        self.y = y
-        self.x = x
-
-    def to_list(self):
-        return [self.x, self.y]
-
-    @staticmethod
-    def from_list(data: List[int]):
-        return Point(data[0], data[1])
-
-    def __repr__(self):
-        return f"({self.y},{self.x})"
-
-
-class ClueAnswerPair:
-    def __init__(
-        self, clue: str, answer: str, start: Point, end: Point, direction: Direction
-    ):
-        self.clue = clue
-        self.answer = answer
-        self.start = start
-        self.end = end
-        self.direction = direction
-
-    def to_dict(self):
-        return {
-            "d": self.direction.to_code(),
-            "xy": self.start.to_list(),
-            "len": len(self.answer),
-            "clue": self.clue,
-            "ans": self.answer,
-        }
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]):
-        start = Point.from_list(data["xy"])
-        direction = Direction.from_code(data["d"])
-        length = data.get("len", len(data["ans"]))
-
-        if direction == Direction.HORIZONTAL:
-            end = Point(start.y, start.x + length - 1)
-        else:
-            end = Point(start.y + length - 1, start.x)
-
-        return cls(data["clue"], data["ans"], start, end, direction)
-
 
 class GridFilling(Enum):
     FREE = 0
@@ -114,9 +33,9 @@ class Direction(Enum):
 
 
 class Point:
-    def __init__(self, y: int, x: int):
-        self.y = y
+    def __init__(self, x: int, y: int):
         self.x = x
+        self.y = y
 
     def to_list(self):
         return [self.x, self.y]
@@ -152,9 +71,9 @@ class ClueAnswerPair:
         length = data.get("len", len(data["ans"]))
 
         if direction == Direction.HORIZONTAL:
-            end = Point(start.y, start.x + length - 1)
+            end = Point(start.x + length - 1, start.y)
         else:
-            end = Point(start.y + length - 1, start.x)
+            end = Point(start.x, start.y + length - 1)
 
         return cls(data["clue"], data["ans"], start, end, direction)
 
