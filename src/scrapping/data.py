@@ -42,7 +42,7 @@ class Point:
         self.x = x
 
     def to_list(self):
-        return [self.y, self.x]
+        return [self.x, self.y]
 
     @staticmethod
     def from_list(data: List[int]):
@@ -119,7 +119,7 @@ class Point:
         self.x = x
 
     def to_list(self):
-        return [self.y, self.x]
+        return [self.x, self.y]
 
     @staticmethod
     def from_list(data: List[int]):
