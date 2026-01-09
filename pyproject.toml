@@ -11,6 +11,7 @@ dependencies = [
     "mini-racer>=0.12.4",
     "numpy>=2.4.0",
     "pandas>=2.3.3",
+    "py-mini-racer>=0.6.0",
     "requests>=2.32.5",
     "sentence-transformers>=5.2.0",
     "spacy>=3.8.11",
