@@ -1,3 +1,4 @@
+import huggingface_hub
 from datasets import load_dataset
 from sentence_transformers import (
     SentenceTransformer,
@@ -17,9 +18,12 @@ BASE_MODEL = "intfloat/multilingual-e5-small"
 OUTPUT_PATH = "data/e5-embedding"
 HUB_MODEL_ID = "kwmk/e5-embedding"
 
+huggingface_hub.login()
+
 # Batch Sizes
-TARGET_BATCH_SIZE = 256
-MINI_BATCH_SIZE = 64
+TARGET_BATCH_SIZE = 2048
+MINI_BATCH_SIZE = 1024
+CORPUS_CHUNK_SIZE = 10_000
 NUM_EPOCHS = 5
 
 # E5 Prefixes
@@ -61,7 +65,7 @@ train_dataset = train_dataset.select_columns(["clue", "answer"])
 # 4. Prepare Evaluator
 # ---------------------------------------------------------
 print("Preparing Evaluator...")
-val_data = dataset["test"]
+val_data = dataset["val"]
 
 queries = {}
 corpus = {}
@@ -83,6 +87,7 @@ evaluator = evaluation.InformationRetrievalEvaluator(
     corpus=corpus,
     relevant_docs=relevant_docs,
     mrr_at_k=[100],
+    corpus_chunk_size=CORPUS_CHUNK_SIZE,
     name="test",
 )
 
@@ -105,14 +110,14 @@ args = SentenceTransformerTrainingArguments(
     warmup_ratio=0.1,
     fp16=True,
     eval_strategy="steps",
-    eval_steps=100,
+    eval_steps=50,
     save_strategy="steps",
-    save_steps=100,
+    save_steps=50,
     save_total_limit=2,
     load_best_model_at_end=True,
-    metric_for_best_model="eval_test_cosine_mrr@10",
+    metric_for_best_model="eval_test_cosine_mrr@100",
     greater_is_better=True,
-    logging_steps=50,
+    logging_steps=10,
     batch_sampler=BatchSamplers.NO_DUPLICATES,
 )
 
