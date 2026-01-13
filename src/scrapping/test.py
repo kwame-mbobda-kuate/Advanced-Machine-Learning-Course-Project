@@ -2,8 +2,9 @@ from data import Grid
 import json
 import shutil
 from pathlib import Path
-
-
+import time
+#from solver.Crossword import Crossword
+#from solver.BPSolver import BPSolvers
 
 def grid_to_crossword(grid_obj):
     height = len(grid_obj.layout)
@@ -19,7 +20,7 @@ def grid_to_crossword(grid_obj):
 
     # 1️⃣ Numérotation + placement des lettres
     for clue in grid_obj.clue_answer_pairs:
-        x, y = clue.start.y, clue.start.x
+        y, x = clue.start.y, clue.start.x
         d = clue.direction.to_code()
 
         if (y, x) not in cell_numbers:
@@ -60,7 +61,6 @@ def grid_to_crossword(grid_obj):
         "clues": {"across": across, "down": down},
         "grid": grid,
     }
-
 
 
 
@@ -151,3 +151,55 @@ def overwrite_with_backup(path):
     data = fix_scraped_grid(data)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+"""Pour calculer les performances des grilles de mots croiser apres scrapping"""
+
+def performance(all_test_grid_in_our_format_grid) :
+    number_grid=0
+    number_correct_grid=0
+    list_letters_prop=[]
+    list_words_prop=[]
+    list_time=[]
+    for grid_obj in all_test_grid_in_our_format_grid:
+        crossword=Crossword(grid_to_crossword(grid_obj))
+        start = time.perf_counter() 
+        solver = BPSolver(crossword)
+        solution=solver.solve()
+        end = time.perf_counter() 
+        list_time.append(end-start)
+        letters_correct_prop, words_correc_prop, grid_correct=solver.evaluate(solution)
+        list_letters_prop.append(letters_correct_prop)
+        list_words_prop.append(words_correc_prop)
+        number_correct_grid+=grid_correct
+        number_grid+=1
+    return sum(list_letters_prop)/number_grid, sum(list_words_prop)/number_grid, number_correct_grid/number_grid, sum(list_time)/number_grid
+
+
+from collections import defaultdict
+
+# letter smoothing reprensente une liste de proba tel qu'un mot de tail n ne soit pas dans le answer set
+def compute_letter_smoothing(set1, answer_set):
+    matches = [0] * (23)
+    
+    counts_by_length = defaultdict(int)
+    for w in set1:
+        counts_by_length[len(w)] += 1
+    
+    for w in set1:
+        l = len(w)
+        if not( w in answer_set):
+            matches[l] += 1
+    
+    # Calcul des probabilités
+    LETTER_SMOOTHING_FACTOR = []
+    for l in range(23):
+        if counts_by_length[l] > 0:
+            prob = matches[l] / counts_by_length[l]
+        else:
+            prob = 0.0
+        LETTER_SMOOTHING_FACTOR.append(prob)
+    
+    print (LETTER_SMOOTHING_FACTOR)
+
+
