@@ -86,7 +86,7 @@ evaluator = evaluation.InformationRetrievalEvaluator(
     queries=queries,
     corpus=corpus,
     relevant_docs=relevant_docs,
-    mrr_at_k=[100],
+    mrr_at_k=[10, 100],
     corpus_chunk_size=CORPUS_CHUNK_SIZE,
     name="test",
 )
@@ -145,3 +145,4 @@ print(f"Uploading model to Hugging Face Hub: {HUB_MODEL_ID}...")
 model.push_to_hub(HUB_MODEL_ID, private=True)
 
 print("Upload complete.")
+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

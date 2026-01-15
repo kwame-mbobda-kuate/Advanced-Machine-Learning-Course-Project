@@ -22,11 +22,6 @@ EVAL_BATCH_SIZE = 1024
 NUM_EPOCHS = 10  # Generative models often converge faster than retrievers
 LEARNING_RATE = 4e-5
 
-# Max lengths (in Bytes/Characters)
-# ByT5 uses roughly 1 token per character.
-MAX_INPUT_LENGTH = 32  # Max length for the Clue
-MAX_TARGET_LENGTH = 16  # Max length for the Answer
-
 print(f"Loading Model: {MODEL_ID}...")
 
 # ---------------------------------------------------------
