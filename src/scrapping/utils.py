@@ -3,9 +3,35 @@ import json
 import shutil
 from pathlib import Path
 import time
+import unicodedata
 
-# from solver.Crossword import Crossword
-# from solver.BPSolver import BPSolvers
+def normalize_clue(clue: str) -> str:
+    clue = clue.strip()
+    clue = (
+        clue.strip()
+        .replace("’", "'")
+        .replace("‘", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("«", '"')
+        .replace("»", '"')
+        .replace("…", "...")
+        .replace("–", "-")
+        .replace("—", "-")
+        .replace("- ", "-")
+    )
+    clue = clue.rstrip(".").strip()
+    if "... " in clue:
+        clue = clue.replace("... ", " ").strip()
+    if clue == clue.upper():
+        clue = clue.capitalize()
+    return clue
+
+
+def normalize_answer(ans: str) -> str:
+    return "".join(
+        filter(str.isalpha, unicodedata.normalize("NFD", ans.upper()))
+    ).replace("Œ", "OE")
 
 
 def grid_to_crossword(grid_obj):

@@ -1,11 +1,9 @@
-import os
 import json
 import random
 import pandas as pd
-import unicodedata
 from pathlib import Path
 from typing import List, Tuple, Dict, Generator
-from collections import defaultdict
+from utils import normalize_answer, normalize_clue
 
 # ==========================================
 # 1. SPLITTING LOGIC
@@ -117,33 +115,7 @@ def _extract_from_csv(filepath: Path) -> Generator[Tuple[str, str], None, None]:
         print(f"Warning: Skipping corrupt CSV {filepath}: {e}")
 
 
-def normalize_clue(clue: str) -> str:
-    clue = clue.strip()
-    clue = (
-        clue.strip()
-        .replace("’", "'")
-        .replace("‘", "'")
-        .replace("“", '"')
-        .replace("”", '"')
-        .replace("«", '"')
-        .replace("»", '"')
-        .replace("…", "...")
-        .replace("–", "-")
-        .replace("—", "-")
-        .replace("- ", "-")
-    )
-    clue = clue.rstrip(".").strip()
-    if "... " in clue:
-        clue = clue.replace("... ", " ").strip()
-    if clue == clue.upper():
-        clue = clue.capitalize()
-    return clue
 
-
-def normalize_answer(ans: str) -> str:
-    return "".join(
-        filter(str.isalpha, unicodedata.normalize("NFD", ans.upper()))
-    ).replace("Œ", "OE")
 
 
 def extract_pairs_from_split(file_list: List[Path]) -> Dict[str, List[str]]:

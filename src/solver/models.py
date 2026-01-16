@@ -69,3 +69,14 @@ class Retriever:
         return [[item["text"] for item in sub_res] for sub_res in res], [
             [item["distance"] for item in sub_res] for sub_res in res
         ]
+
+    def iter_all_data(self):
+        iterator = self.client.query_iterator(
+            collection_name="answers",
+            filter="",
+            batch_size=1000,
+            output_fields=["text"],
+        )
+        for page in iterator:
+            for entity in page:
+                yield entity["text"]
