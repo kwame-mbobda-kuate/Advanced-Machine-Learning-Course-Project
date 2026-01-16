@@ -14,9 +14,9 @@ from sentence_transformers.training_args import BatchSamplers
 # 1. Configuration
 # ---------------------------------------------------------
 DATASET_NAME = "kwmk/CrosswordClueAnswers"
-BASE_MODEL = "intfloat/multilingual-e5-small"
-OUTPUT_PATH = "data/e5-embedding"
-HUB_MODEL_ID = "kwmk/e5-embedding"
+BASE_MODEL = "dangvantuan/sentence-camembert-base"
+OUTPUT_PATH = "data/scabert"
+HUB_MODEL_ID = "kwmk/scabert"
 
 huggingface_hub.login()
 
@@ -24,11 +24,12 @@ huggingface_hub.login()
 TARGET_BATCH_SIZE = 2048
 MINI_BATCH_SIZE = 1024
 CORPUS_CHUNK_SIZE = 10_000
-NUM_EPOCHS = 5
+NUM_EPOCHS = 10
+SCALE = 20
 
 # E5 Prefixes
-QUERY_PREFIX = "query: "
-PASSAGE_PREFIX = "passage: "
+QUERY_PREFIX = ""
+PASSAGE_PREFIX = ""
 
 print(f"Initializing encoding model from {BASE_MODEL}...")
 
@@ -52,7 +53,7 @@ print("Preprocessing training data (adding prefixes)...")
 def add_prefixes(examples):
     return {
         "clue": [QUERY_PREFIX + t for t in examples["clue"]],
-        "answer": [PASSAGE_PREFIX + t for t in examples["answer"]],
+        "answer": [PASSAGE_PREFIX + t.lower() for t in examples["answer"]],
     }
 
 
@@ -79,14 +80,14 @@ for idx, row in enumerate(val_data):
     # Note: InformationRetrievalEvaluator calls model.encode().
     # With a Router, it's best to ensure the inputs have prefixes.
     queries[q_id] = QUERY_PREFIX + row["clue"]
-    corpus[doc_id] = PASSAGE_PREFIX + row["answer"]
+    corpus[doc_id] = PASSAGE_PREFIX + row["answer"].lower()
     relevant_docs[q_id] = {doc_id}
 
 evaluator = evaluation.InformationRetrievalEvaluator(
     queries=queries,
     corpus=corpus,
     relevant_docs=relevant_docs,
-    mrr_at_k=[100],
+    mrr_at_k=[10, 100],
     corpus_chunk_size=CORPUS_CHUNK_SIZE,
     name="test",
 )
@@ -95,7 +96,7 @@ evaluator = evaluation.InformationRetrievalEvaluator(
 # 5. Define Loss
 # ---------------------------------------------------------
 train_loss = losses.CachedMultipleNegativesRankingLoss(
-    model=model, mini_batch_size=MINI_BATCH_SIZE, scale=100.0
+    model=model, mini_batch_size=MINI_BATCH_SIZE, scale=SCALE
 )
 
 # ---------------------------------------------------------
