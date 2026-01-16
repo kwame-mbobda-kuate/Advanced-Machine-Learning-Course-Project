@@ -2,8 +2,6 @@ from solver.models import Encoder, Retriever
 import pandas as pd
 import numpy as np
 import click
-import tqdm
-
 
 @click.command()
 @click.argument("db_path")
@@ -23,31 +21,29 @@ def eval_accuracy(
     encoder = Encoder(model_name_or_path)
     retriever = Retriever(db_path)
     df = pd.read_parquet(parquet_path)
-    top_k = np.linspace(1, max_top_k, n_top_k).astype(int)
-    ranks = []
-    for j in tqdm.tqdm(range(0, len(parquet_path), batch_size)):
-        split = df[j: j + batch_size].reset_index()
-        encodings = encoder.encode(split["clue"])
-        res, _ = retriever.retrieve(encodings, max_top_k)
-        for sub_res, answer in zip(res, split["answer"]):
-            ranks.append(sub_res.index(answer) if answer in sub_res else np.inf)
-    acc = [0] * n_top_k
-    for rank in ranks:
-        for i in range(n_top_k):
-            if rank < top_k[i]:
-                acc[i] += 1
-    acc = np.array(acc) / len(ranks)
 
-    oracle_acc = 0
-    all_known_answers = set()
-    for known_answer in retriever.iter_all_data():
-        all_known_answers.add(known_answer)
-    for answer in df["answer"]:
-        oracle_acc += answer in all_known_answers
-    oracle_acc /= len(df)
+    top_k_thresholds = np.linspace(1, max_top_k, n_top_k).astype(int)
+    encodings = encoder.encode(df["clue"], batch_size, show_progress_bar=True)
+    res, _ = retriever.retrieve(encodings, max_top_k)
+    res_array = np.array(res)
+    ground_truth = df["answer"].to_numpy()[:, None]
+    matches_matrix = res_array == ground_truth
+    acc = np.array([matches_matrix[:, :k].any(axis=1).mean() for k in top_k_thresholds])
 
+    all_known_answers = set(retriever.iter_all_data())
+    oracle_acc = df["answer"].isin(all_known_answers).mean()
+
+    print(top_k_thresholds)
     print(acc)
     print(oracle_acc)
+
+def eval_accuracy(
+    db_path: str,
+    retriever_model_name_or_path: str,
+    reranker_model_name_or_path: str,
+    grid_folder: str
+):
+
 
 if __name__ == "__main__":
     print(eval_accuracy())

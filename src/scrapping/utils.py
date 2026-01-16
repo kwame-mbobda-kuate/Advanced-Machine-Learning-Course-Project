@@ -30,8 +30,8 @@ def normalize_clue(clue: str) -> str:
 
 def normalize_answer(ans: str) -> str:
     return "".join(
-        filter(str.isalpha, unicodedata.normalize("NFD", ans.upper()))
-    ).replace("Œ", "OE")
+        filter(str.isalpha, unicodedata.normalize("NFD", ans.lower()))
+    ).replace("œ", "oe")
 
 
 def grid_to_crossword(grid_obj):

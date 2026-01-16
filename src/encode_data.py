@@ -1,8 +1,6 @@
 import pandas as pd
 import click
-import tqdm
 from solver.models import Encoder, Retriever
-
 
 @click.command()
 @click.argument("db_path")
@@ -24,10 +22,8 @@ def encode_answers(
     if init:
         retriever.init(dim)
     df = pd.read_parquet(parquet_path)
-    for k in tqdm.tqdm(range(0, len(df), batch_size)):
-        answers = df[k: k + batch_size]["answer"].tolist()
-        encodings = encoder.encode(answers).tolist()
-        retriever.insert(encodings, answers)
+    encodings = encoder.encode(df["answer"], batch_size, show_progress_bar=True).tolist()
+    retriever.insert(encodings, df["answer"])
 
 
 if __name__ == '__main__':

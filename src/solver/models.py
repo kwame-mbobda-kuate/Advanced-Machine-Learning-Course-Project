@@ -10,6 +10,8 @@ import numpy as np
 
 MAX_INPUT_LENGTH = 32
 MAX_TARGET_LENGTH = 16
+DB_BATCH_SIZE = 10_000
+BATCH_SIZE = 4096
 
 
 class Reranker:
@@ -48,55 +50,67 @@ class Encoder:
     def __init__(self, model_name_or_path: str):
         self.model = SentenceTransformer(model_name_or_path)
 
-    def encode(self, text: Union[str, List[str]]) -> np.ndarray:
-        return self.model.encode(text)
+    def encode(
+        self,
+        text: Union[str, List[str]],
+        batch_size: int = BATCH_SIZE,
+        show_progress_bar=False,
+    ) -> np.ndarray:
+        return self.model.encode(
+            text,
+            batch_size=batch_size,
+            show_progress_bar=show_progress_bar,
+            convert_to_numpy=True,
+        )
+
+
+from pymilvus import MilvusClient, DataType
+import pandas as pd
+from concurrent.futures import ThreadPoolExecutor
 
 
 class Retriever:
-
     def __init__(self, path: str):
         self.client = MilvusClient(path)
+        self.collection_name = "answers"
 
     def init(self, dim: int):
         schema = MilvusClient.create_schema(auto_id=True, enable_dynamic_field=True)
         schema.add_field(field_name="vector", datatype=DataType.FLOAT_VECTOR, dim=dim)
         schema.add_field(field_name="id", datatype=DataType.INT64, is_primary=True)
         schema.add_field(field_name="text", datatype=DataType.VARCHAR, max_length=100)
+
+        if self.client.has_collection(self.collection_name):
+            self.client.drop_collection(self.collection_name)
+
+        self.client.create_collection(self.collection_name, schema=schema)
+
+    def insert(self, encodings, answers, batch_size=BATCH_SIZE):
+        def _send_batch(batch_df):
+            self.client.insert(self.collection_name, data=batch_df.to_dict("records"))
+
+        df = pd.DataFrame(
+            {
+                "vector": encodings,
+                "text": answers,
+            }
+        )
+
+        total_rows = len(df)
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = []
+            for i in range(0, total_rows, batch_size):
+                batch_df = df.iloc[i: i + batch_size]
+                futures.append(executor.submit(_send_batch, batch_df))
+            for f in futures:
+                f.result()
+        self.build_index()
+
+    def build_index(self):
         index_params = self.client.prepare_index_params()
         index_params.add_index(
             field_name="vector", index_type="AUTOINDEX", metric_type="COSINE"
         )
-        self.client.create_collection(
-            "answers", schema=schema, index_params=index_params, auto_id=True
-        )
 
-    def insert(self, encodings, answers):
-        data = [
-            {"vector": encoding, "text": answer}
-            for encoding, answer in zip(encodings, answers)
-        ]
-        self.client.insert("answers", data)
-
-    def retrieve(
-        self, vector: List[np.ndarray], k: int
-    ) -> Tuple[List[List[str]], List[float]]:
-        res = self.client.search(
-            collection_name="answers",
-            data=vector,
-            limit=k,
-            output_fields=["text"],
-        )
-        return [[item["text"] for item in sub_res] for sub_res in res], [
-            [item["distance"] for item in sub_res] for sub_res in res
-        ]
-
-    def iter_all_data(self):
-        iterator = self.client.query_iterator(
-            collection_name="answers",
-            filter="",
-            batch_size=1000,
-            output_fields=["text"],
-        )
-        while res := iterator.next():
-            for entity in res:
-                yield entity["text"]
+        self.client.create_index(self.collection_name, index_params=index_params)
+        self.client.load_collection(self.collection_name)

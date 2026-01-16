@@ -41,7 +41,7 @@ class Solver:
 
         # get predictions
         encodings = self.encoder.encode(all_clues)
-        all_words, all_scores = self.retriver.retrieve(encodings, self.max_candidates)
+        all_words, all_scores = self.retriever.retrieve(encodings, self.max_candidates)
         for index, var in enumerate(self.crossword.variables):
             length = len(self.crossword.variables[var]["gold"])
             self.candidates[var] = {"words": [], "bit_array": None, "weights": {}}
@@ -98,7 +98,7 @@ class Solver:
                     # NOTE: TODO, it's possible to cache more here in exchange for doing more work at init time
 
     def evaluate(self, solution):
-        # print puzzle accuracy results given a generated solution
+        # calculate puzzle accuracy results given a generated solution
         letters_correct = 0
         letters_total = 0
         for i in range(len(self.crossword.letter_grid)):
@@ -108,6 +108,7 @@ class Solver:
                         self.crossword.letter_grid[i][j] == solution[i][j]
                     )
                     letters_total += 1
+
         words_correct = 0
         words_total = 0
         for var in self.crossword.variables:
@@ -119,27 +120,16 @@ class Solver:
             ]
             if len(cells) == sum(matching_cells):
                 words_correct += 1
-            else:
-                print(
-                    "evaluation: correct word",
-                    "".join(
-                        [self.crossword.letter_grid[cell[0]][cell[1]] for cell in cells]
-                    ),
-                    "our prediction:",
-                    "".join([solution[cell[0]][cell[1]] for cell in cells]),
-                )
             words_total += 1
-        print(
-            "Letters Correct: {}/{} | Words Correct: {}/{}".format(
-                int(letters_correct),
-                int(letters_total),
-                int(words_correct),
-                int(words_total),
-            )
-        )
-        print(
-            "Letters Correct: {}% | Words Correct: {}%".format(
-                float(letters_correct / letters_total * 100),
-                float(words_correct / words_total * 100),
-            )
-        )
+
+        letter_accuracy = letters_correct / letters_total if letters_total > 0 else 0.0
+        word_accuracy = words_correct / words_total if words_total > 0 else 0.0
+
+        return {
+            "letters_correct": letters_correct,
+            "letters_total": letters_total,
+            "words_correct": words_correct,
+            "words_total": words_total,
+            "letter_accuracy": letter_accuracy,
+            "word_accuracy": word_accuracy,
+        }
