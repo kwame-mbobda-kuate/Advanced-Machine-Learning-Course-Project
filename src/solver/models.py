@@ -1,4 +1,4 @@
-from pymilvus import MilvusClient
+from pymilvus import MilvusClient, DataType
 from typing import List, Union, Tuple
 from sentence_transformers import SentenceTransformer
 from transformers import (
@@ -57,11 +57,31 @@ class Retriever:
     def __init__(self, path: str):
         self.client = MilvusClient(path)
 
+    def init(self, dim: int):
+        schema = MilvusClient.create_schema(auto_id=True, enable_dynamic_field=True)
+        schema.add_field(field_name="vector", datatype=DataType.FLOAT_VECTOR, dim=dim)
+        schema.add_field(field_name="id", datatype=DataType.INT64, is_primary=True)
+        schema.add_field(field_name="text", datatype=DataType.VARCHAR, max_length=100)
+        index_params = self.client.prepare_index_params()
+        index_params.add_index(
+            field_name="vector", index_type="AUTOINDEX", metric_type="COSINE"
+        )
+        self.client.create_collection(
+            "answers", schema=schema, index_params=index_params, auto_id=True
+        )
+
+    def insert(self, encodings, answers):
+        data = [
+            {"vector": encoding, "text": answer}
+            for encoding, answer in zip(encodings, answers)
+        ]
+        self.client.insert("answers", data)
+
     def retrieve(
         self, vector: List[np.ndarray], k: int
     ) -> Tuple[List[List[str]], List[float]]:
         res = self.client.search(
-            collection_name="answer",
+            collection_name="answers",
             data=vector,
             limit=k,
             output_fields=["text"],
@@ -77,6 +97,6 @@ class Retriever:
             batch_size=1000,
             output_fields=["text"],
         )
-        for page in iterator:
-            for entity in page:
+        while res := iterator.next():
+            for entity in res:
                 yield entity["text"]
