@@ -2,7 +2,36 @@ from data import Grid
 import json
 import shutil
 from pathlib import Path
+import time
+import unicodedata
 
+def normalize_clue(clue: str) -> str:
+    clue = clue.strip()
+    clue = (
+        clue.strip()
+        .replace("’", "'")
+        .replace("‘", "'")
+        .replace("“", '"')
+        .replace("”", '"')
+        .replace("«", '"')
+        .replace("»", '"')
+        .replace("…", "...")
+        .replace("–", "-")
+        .replace("—", "-")
+        .replace("- ", "-")
+    )
+    clue = clue.rstrip(".").strip()
+    if "... " in clue:
+        clue = clue.replace("... ", " ").strip()
+    if clue == clue.upper():
+        clue = clue.capitalize()
+    return clue
+
+
+def normalize_answer(ans: str) -> str:
+    return "".join(
+        filter(str.isalpha, unicodedata.normalize("NFD", ans.upper()))
+    ).replace("Œ", "OE")
 
 
 def grid_to_crossword(grid_obj):
@@ -19,7 +48,7 @@ def grid_to_crossword(grid_obj):
 
     # 1️⃣ Numérotation + placement des lettres
     for clue in grid_obj.clue_answer_pairs:
-        x, y = clue.start.y, clue.start.x
+        y, x = clue.start.y, clue.start.x
         d = clue.direction.to_code()
 
         if (y, x) not in cell_numbers:
@@ -62,8 +91,6 @@ def grid_to_crossword(grid_obj):
     }
 
 
-
-
 """Pour corriger les grilles de mots croiser apres scrapping"""
 
 
@@ -73,7 +100,7 @@ def word_fits(layout, word, x, y, direction):
     """
     height = len(layout)
     width = len(layout[0])
-    
+
     word = filter(str.isalpha, word)
     for i, letter in enumerate(word):
         letter = strip_accents(letter.upper())

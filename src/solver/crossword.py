@@ -1,4 +1,4 @@
-from solver.Utils import clean
+from solver.utils import clean
 
 
 class Crossword:
@@ -13,7 +13,7 @@ class Crossword:
     Attributes:
         self.letter_grid (list): 2D array representing gold crossword solution
         self.number_grid (list): 2D array with numbers representing beginnings of clues
-        self.variables (dict): mapping from clues to gold answers, cells, and intersecting clues
+        self.variables (dict): mapping from clues (str) to gold answers (str), cells (format [(row1,col1),..]), and intersecting clues (format: 17A or 1D)
     """
 
     def __init__(self, data):

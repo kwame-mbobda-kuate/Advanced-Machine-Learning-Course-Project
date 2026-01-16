@@ -7,62 +7,52 @@ The paper's procedure of infilling / finding words not in the original provided 
 We instead using iterative search after the fact by replacing characters one-by-one in our solution.
 """
 
+import pandas as pd
 import math
 import string
 from collections import defaultdict
 from copy import deepcopy
+from typing import List
 
 import numpy as np
 from scipy.special import log_softmax, softmax
 from tqdm import trange
 
-from solver.Utils import print_grid, get_word_flips
-from solver.Solver import Solver
-from models import setup_t5_reranker, t5_reranker_score_with_clue
-
-# our answer set
-answer_set = set()
-with open("checkpoints/biencoder/wordlist.tsv", "r") as rf:
-    for line in rf:
-        w = "".join(
-            [
-                c.upper()
-                for c in (line.split("\t")[-1]).upper()
-                if c in string.ascii_uppercase
-            ]
-        )
-        answer_set.add(w)
+from solver.utils import print_grid, get_word_flips
+from solver.solver import Solver
+from models import Reranker
 
 
 # the probability of each alphabetical character in the crossword
 UNIGRAM_PROBS = [
-    ("A", 0.0897379968935765),
-    ("B", 0.02121248877769636),
-    ("C", 0.03482206634145926),
-    ("D", 0.03700942543460491),
-    ("E", 0.1159773210750429),
-    ("F", 0.017257461694024614),
-    ("G", 0.025429024796296124),
-    ("H", 0.033122967601502),
-    ("I", 0.06800036223479956),
-    ("J", 0.00294611331754349),
-    ("K", 0.013860682888259786),
-    ("L", 0.05130800574373874),
-    ("M", 0.027962776827660175),
-    ("N", 0.06631994270448001),
-    ("O", 0.07374646543246745),
-    ("P", 0.026750756212433214),
-    ("Q", 0.001507814175439393),
-    ("R", 0.07080460813737305),
-    ("S", 0.07410988246048224),
-    ("T", 0.07242993582154593),
-    ("U", 0.0289272388037645),
-    ("V", 0.009153522059555467),
-    ("W", 0.01434705167591524),
-    ("X", 0.003096729223103298),
-    ("Y", 0.01749958208224007),
-    ("Z", 0.002659777584995724),
+    ("A", 0.09028146545238917),
+    ("B", 0.014518006177592508),
+    ("C", 0.03505263786740302),
+    ("D", 0.020129725017479578),
+    ("E", 0.19116075458672968),
+    ("F", 0.00896824027117684),
+    ("G", 0.017465195727017675),
+    ("H", 0.008331010098328156),
+    ("I", 0.08466698085654356),
+    ("J", 0.0010609439856977228),
+    ("K", 0.0009453353866305569),
+    ("L", 0.046664940834948536),
+    ("M", 0.025458230447211676),
+    ("N", 0.06676756144403438),
+    ("O", 0.052534428130171965),
+    ("P", 0.02305368221685297),
+    ("Q", 0.001631242864349627),
+    ("R", 0.09439691031870359),
+    ("S", 0.08389035658338423),
+    ("T", 0.07272555292993123),
+    ("U", 0.04345389816707821),
+    ("V", 0.011729017868996097),
+    ("W", 0.00022623883740895132),
+    ("X", 0.0024875209091150467),
+    ("Y", 0.0016445184929506412),
+    ("Z", 0.0007556045278743948),
 ]
+
 # the LETTER_SMOOTHING_FACTOR controls how much we interpolate with the unigram LM. TODO this should be tuned.
 # Right now it is set according to the probability that the answer is not in the answer set
 LETTER_SMOOTHING_FACTOR = [
@@ -91,9 +81,39 @@ LETTER_SMOOTHING_FACTOR = [
     0.0,
 ]
 
+MIN_PROBABILITY = 0.01
+MIN_SCORE_DIFF = 0.05
+
 
 class BPVar:
     def __init__(self, name, variable, candidates, cells):
+        """
+        Représente une **variable de mot** dans un puzzle de mots croisés pour la propagation de croyances (belief propagation).
+
+        Chaque instance correspond à un mot spécifique de la grille et gère :
+            - Les lettres du mot solution (`gold word`).
+            - Les candidats possibles et leurs probabilités.
+            - Les scores locaux et directionnels pour la propagation.
+            - La communication avec les cellules qu il occupe pour mettre à jour les croyances sur les lettres.
+
+        Args:
+            name (str):  nom du mot.
+            variable (dict): Contient les informations du mot, incluant la liste de ses cellules et les indices de mots croisés intersectants.
+            candidates (dict): Dictionnaire avec les mots candidats, leurs poids (coûts), et la représentation binaire de chaque lettre.
+            cells (list of BPCell): Liste des cellules correspondant aux lettres du mot dans la grille.
+
+        Attributs principaux:
+            self.name (str): Nom du mot.
+            self.length (int): Nombre de lettres du mot.
+            self.ordered_cells (list of BPCell): Cellules de la grille dans l ordre du mot.
+            self.candidates (dict): Dictionnaire des candidats possibles.
+            self.words (list of str): Liste des mots candidats.
+            self.word_indices (np.array): Représentation numérique des lettres des candidats.
+            self.scores (np.array): Scores négatifs (coûts) des mots candidats.
+            self.prior_log_probs (np.array): Probabilités a priori log-normalisées.
+            self.log_probs (np.array): Probabilités log-normalisées mises à jour après propagation.
+            self.directional_scores (list of np.array): Scores venant de chaque cellule pour la propagation.
+        """
         self.name = name
         cells_by_position = {}
         for cell in cells:
@@ -157,7 +177,29 @@ class BPVar:
 
 
 class BPCell:
+
     def __init__(self, position, clue_pair):
+        """
+        Représente une **cellule de lettre** dans la grille de mots croisés pour la propagation de croyances.
+
+        Chaque cellule peut être traversée par jusqu’à deux mots (variables). La cellule :
+            - Maintient les probabilités log pour chaque lettre.
+            - Stocke les variables qui la traversent (crossing_vars) et leurs scores directionnels.
+            - Permet la propagation des croyances entre lettres et mots.
+
+        Args:
+            position (tuple): Coordonnées (ligne, colonne) de la cellule dans la grille.
+            clue_pair (list of str): Liste des indices de mots croisés qui passent par cette cellule (ex : ["1A", "5D"]).
+
+        Attributs principaux:
+            self.position (tuple): Position de la cellule dans la grille.
+            self.crossing_clues (list of str): Clues qui passent par cette cellule.
+            self.letters (list of str): Alphabet complet pour les probabilités.
+            self.log_probs (np.array): Probabilités log pour chaque lettre.
+            self.crossing_vars (list of BPVar): Variables (mots) traversant cette cellule.
+            self.directional_scores (list of np.array): Scores directionnels venant des variables.
+            self.prediction (dict): Mot prédit pour chaque clue associé à cette cellule.
+        """
         self.crossing_clues = clue_pair
         self.position = tuple(position)
         self.letters = list(string.ascii_uppercase)
@@ -188,11 +230,12 @@ class BPCell:
 
 
 class BPSolver(Solver):
-    def __init__(self, crossword, max_candidates=500000, process_id=0, **kwargs):
-        super().__init__(
-            crossword, max_candidates=max_candidates, process_id=process_id, **kwargs
-        )
+    def __init__(
+        self, crossword, retriever, encoder, reranker, max_candidates, **kwargs
+    ):
+        super().__init__(crossword, retriever, encoder, max_candidates)
         self.crossword = crossword
+        self.reranker = reranker
         self.reset()
 
     def reset(self):
@@ -244,8 +287,6 @@ class BPSolver(Solver):
             else:
                 return grid
 
-        self.reranker, self.tokenizer = setup_t5_reranker(self.process_id)
-
         for i in range(iterative_improvement_steps):
             print("starting iterative improvement step " + str(i))
             print("Accuracy if we knew to stop right now")
@@ -296,15 +337,17 @@ class BPSolver(Solver):
                 assert len(flip) == len(cells)
                 for i in range(len(flip)):
                     if flip[i] != initial_word[i]:
-                        candidate_replacements.append([(cells[i], flip[i])])
+                        candidate_replacements.append(
+                            [(cells[i], flip[i])]
+                        )  # c'est une liste de liste d'un tuple (bpcellule et une lettre )
                         break
 
         # also add candidates based on uncertainties in the letters, e.g., if we said P but G also had some probability, try G too
         for cell_id, cell in enumerate(self.bp_cells):
             probs = np.exp(cell.log_probs)
-            above_threshold = list(probs > 0.01)
+            above_threshold = list(probs > MIN_PROBABILITY)
             new_characters = [
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[i] for i in range(26) if above_threshold[i]
+                string.ascii_uppercase[i] for i in range(26) if above_threshold[i]
             ]
             # used = set()
             # new_characters = [x for x in new_characters if x not in used and (used.add(x) or True)] # unique the set
@@ -320,7 +363,7 @@ class BPSolver(Solver):
                         candidate_replacements.append([(cell, new_character)])
                     replacement_id_set.add(id)
 
-        # create composite flips based on things in the same row/column
+        # create composite flips based on things in the same row/column. chaque flip = modif 1 lettre. maintenant on autorise modif de 2 lettres dans un meme mot
         composite_replacements = []
         for i in range(len(candidate_replacements)):
             for j in range(i + 1, len(candidate_replacements)):
@@ -336,12 +379,14 @@ class BPSolver(Solver):
 
         candidate_replacements += composite_replacements
 
-        # print('\ncandidate replacements')
+        # print('\ncandidate replacements') (juste affichage)
         for cr in candidate_replacements:
             modified_grid = deepcopy(grid)
             for cell, letter in cr:
                 modified_grid[cell.position[0]][cell.position[1]] = letter
-            variables = set(sum([cell.crossing_vars for cell, _ in cr], []))
+            variables = set(
+                sum([cell.crossing_vars for cell, _ in cr], [])
+            )  #  variables toucher par les modifs
             for var in variables:
                 original_fill = "".join(
                     [
@@ -399,9 +444,7 @@ class BPSolver(Solver):
             )
             clues.append(self.crossword.variables[clue]["clue"])
             answers.append(letters)
-        scores = t5_reranker_score_with_clue(
-            self.reranker, self.tokenizer, clues, answers
-        )
+        scores = self.reranker(clues, answers)
         return sum(scores)
 
     def greedy_sequential_word_solution(self, return_grids=False):
@@ -439,7 +482,7 @@ class BPSolver(Solver):
                             j
                             for j in range(len(var.words))
                             if var.words[j][cell_index] == letter
-                        ]
+                        ]  # on garde que les mots qui ont le bon indices pour les mots qui croisent le mot qu'on vient de placer
                         var.words = [var.words[j] for j in keep_indices]
                         var.log_probs = var.log_probs[keep_indices]
                         var_index = self.bp_vars.index(var)
@@ -470,7 +513,7 @@ class BPSolver(Solver):
         self.candidate_replacements = self.get_candidate_replacements(
             uncertain_answers, grid
         )
-
+        # on cherche les candidats qui modifient significativemment la grille
         print("\nstarting iterative improvement")
         original_grid_score = self.score_grid(grid)
         possible_edits = []
@@ -508,13 +551,13 @@ class BPSolver(Solver):
                 "modified score:",
                 modified_grid_score,
             )
-            if modified_grid_score - original_grid_score > 0.5:
+            if modified_grid_score - original_grid_score > MIN_SCORE_DIFF:
                 print("found a possible edit")
                 possible_edits.append(
                     (modified_grid, modified_grid_score, replacements)
                 )
             print()
-
+        # on prend les meileurs edit possible sans qu'aucunes ne se croisent
         if len(possible_edits) > 0:
             variables_modified = set()
             possible_edits = sorted(possible_edits, key=lambda x: x[1], reverse=True)
@@ -529,7 +572,7 @@ class BPSolver(Solver):
                 ):  # we can do multiple updates at once if they don't share clues
                     variables_modified.update(variables)
                     selected_edits.append(edit)
-
+            # on realise les meileurs edit selectionner
             new_grid = deepcopy(grid)
             for edit in selected_edits:
                 print("\nactually applying edit")

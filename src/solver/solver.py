@@ -1,11 +1,9 @@
-import re
 from collections import defaultdict
 import string
-
 from scipy.special import softmax
 import numpy as np
-
-from models import answer_clues, setup_closedbook
+from models import Retriever, Encoder
+from crossword import Crossword
 
 
 class Solver:
@@ -18,10 +16,17 @@ class Solver:
         max_candidates (int): number of answer candidates to consider per clue
     """
 
-    def __init__(self, crossword, max_candidates=1000, process_id=0):
+    def __init__(
+        self,
+        crossword: Crossword,
+        retriever: Retriever,
+        encoder: Encoder,
+        max_candidates: int,
+    ):
         self.crossword = crossword
+        self.retriever = retriever
+        self.encoder = encoder
         self.max_candidates = max_candidates
-        self.process_id = process_id
         self.get_candidates()
 
     def get_candidates(self):
@@ -34,29 +39,9 @@ class Solver:
         for var in self.crossword.variables:
             all_clues.append(self.crossword.variables[var]["clue"])
 
-        # replaces stuff like "Opposite of 29-across" with "Opposite of X", where X is the clue for 29-across
-        r = re.compile("([0-9]+)[-\s](down|across)", re.IGNORECASE)
-        matches = [
-            (idx, r.search(clue))
-            for idx, clue in enumerate(all_clues)
-            if r.search(clue) != None
-        ]
-        for idx, match in matches:
-            clue = all_clues[idx]
-            var = str(match.group(1)) + str(match.group(2)[0]).upper()
-            if var in self.crossword.variables:
-                clue = (
-                    clue[: match.start()]
-                    + self.crossword.variables[var]["clue"]
-                    + clue[match.end() :]
-                )
-                all_clues[idx] = clue
-
         # get predictions
-        dpr = setup_closedbook(self.process_id)
-        all_words, all_scores = answer_clues(
-            dpr, all_clues, max_answers=self.max_candidates, output_strings=True
-        )
+        encodings = self.encoder.encode(all_clues)
+        all_words, all_scores = self.retriver.retrieve(encodings, self.max_candidates)
         for index, var in enumerate(self.crossword.variables):
             length = len(self.crossword.variables[var]["gold"])
             self.candidates[var] = {"words": [], "bit_array": None, "weights": {}}
@@ -111,9 +96,6 @@ class Solver:
                         char
                     ].append(word_idx)
                     # NOTE: TODO, it's possible to cache more here in exchange for doing more work at init time
-
-        # cleanup a bit
-        del dpr
 
     def evaluate(self, solution):
         # print puzzle accuracy results given a generated solution
