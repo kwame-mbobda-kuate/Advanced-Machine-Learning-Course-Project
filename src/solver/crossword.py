@@ -1,4 +1,4 @@
-from solver.utils import clean
+from .utils import clean
 
 
 class Crossword:

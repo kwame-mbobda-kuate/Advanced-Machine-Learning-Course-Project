@@ -18,9 +18,9 @@ import numpy as np
 from scipy.special import log_softmax, softmax
 from tqdm import trange
 
-from solver.utils import print_grid, get_word_flips
-from solver.solver import Solver
-from models import Reranker
+from .utils import print_grid
+from .base_solver import BaseSolver
+from .models import Reranker
 
 
 # the probability of each alphabetical character in the crossword
@@ -229,7 +229,7 @@ class BPCell:
             v._propagate_to_var(self, self.directional_scores[1 - i])
 
 
-class BPSolver(Solver):
+class BPSolver(BaseSolver):
     def __init__(
         self, crossword, retriever, encoder, reranker, max_candidates, **kwargs
     ):

@@ -2,11 +2,11 @@ from collections import defaultdict
 import string
 from scipy.special import softmax
 import numpy as np
-from models import Retriever, Encoder
-from crossword import Crossword
+from .crossword import Crossword
+from .models import Retriever, Encoder
 
 
-class Solver:
+class BaseSolver:
     """
     This class represents an abstraction over different types of crossword solvers. Each puzzle contains
     a list of clues, which are associated with (weighted) values for each candidate answer.
@@ -31,7 +31,7 @@ class Solver:
 
     def get_candidates(self):
         # get answers from neural model and fill up data structures with the results
-        chars = string.ascii_uppercase
+        chars = string.ascii_lowercase
         self.char_map = {char: idx for idx, char in enumerate(chars)}
         self.candidates = {}
 

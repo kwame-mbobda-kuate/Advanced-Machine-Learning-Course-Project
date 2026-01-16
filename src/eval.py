@@ -1,7 +1,14 @@
-from solver.models import Encoder, Retriever
+from solver.models import Encoder, Retriever, Reranker
+from solver.bpsolver import BPSolver
+from solver.utils import print_grid
+from solver.crossword import Crossword
+from scrapping.utils import grid_to_crossword
+from scrapping.data import Grid
 import pandas as pd
 import numpy as np
 import click
+from pathlib import Path
+
 
 @click.command()
 @click.argument("db_path")
@@ -37,13 +44,36 @@ def eval_accuracy(
     print(acc)
     print(oracle_acc)
 
-def eval_accuracy(
+
+def eval_solver_accuracy(
     db_path: str,
-    retriever_model_name_or_path: str,
+    encoder_model_name_or_path: str,
     reranker_model_name_or_path: str,
-    grid_folder: str
+    grid_folder: str,
 ):
+    retriever = Retriever(db_path)
+    # encoder = Encoder(encoder_model_name_or_path)
+    # reranker = Reranker(reranker_model_name_or_path)
+    reranker = None
+    encoder = None
+    for file in Path(grid_folder).rglob("*.json"):
+        with open(file, "r", encoding="utf8") as f:
+            json_grid = f.read()
+        grid = Grid.from_json(json_grid)
+        grid.normalize()
+        print(grid.clue_answer_pairs)
+        solver = BPSolver(
+            Crossword(grid_to_crossword(grid)), retriever, encoder, reranker, 800
+        )
+        solved_grid = solver.solve()
+        print_grid(solved_grid)
+        print(solver.evaluate(solved_grid))
 
 
 if __name__ == "__main__":
-    print(eval_accuracy())
+    eval_solver_accuracy(
+        "/home/onyxia/work/Advanced-Machine-Learning-Course-Project/data/main.db",
+        "kwmk/scabert",
+        "kwmk/barthez",
+        "/home/onyxia/work/Advanced-Machine-Learning-Course-Project/data/grids",
+    )

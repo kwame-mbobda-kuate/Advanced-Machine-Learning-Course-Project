@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional, List, Any, Dict
 import json
 import datetime
+from scrapping.utils import normalize_clue, normalize_answer
 
 
 class GridFilling(Enum):
@@ -169,6 +170,12 @@ class Grid:
             difficulty=meta.get("difficulty"),
             title=meta.get("title"),
         )
+    
+    def normalize(self):
+        for ca in self.clue_answer_pairs:
+            ca.clue = normalize_clue(ca.clue)
+            ca.answer = normalize_answer(ca.answer)
+            
 
 
 class GridConversionError(Exception):

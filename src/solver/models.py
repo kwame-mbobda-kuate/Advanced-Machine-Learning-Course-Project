@@ -1,5 +1,7 @@
 from pymilvus import MilvusClient, DataType
 from typing import List, Union, Tuple
+import pandas as pd
+from concurrent.futures import ThreadPoolExecutor
 from sentence_transformers import SentenceTransformer
 from transformers import (
     AutoTokenizer,
@@ -64,11 +66,6 @@ class Encoder:
         )
 
 
-from pymilvus import MilvusClient, DataType
-import pandas as pd
-from concurrent.futures import ThreadPoolExecutor
-
-
 class Retriever:
     def __init__(self, path: str):
         self.client = MilvusClient(path)
@@ -100,7 +97,7 @@ class Retriever:
         with ThreadPoolExecutor(max_workers=4) as executor:
             futures = []
             for i in range(0, total_rows, batch_size):
-                batch_df = df.iloc[i: i + batch_size]
+                batch_df = df.iloc[i : i + batch_size]
                 futures.append(executor.submit(_send_batch, batch_df))
             for f in futures:
                 f.result()
@@ -114,3 +111,18 @@ class Retriever:
 
         self.client.create_index(self.collection_name, index_params=index_params)
         self.client.load_collection(self.collection_name)
+
+    def retrieve(
+        self, vector: List[np.ndarray], k: int
+    ) -> Tuple[List[List[str]], List[float]]:
+
+        res = self.client.search(
+            collection_name=self.collection_name,
+            data=vector,
+            limit=k,
+            output_fields=["text"],
+        )
+
+        return [[item["text"] for item in sub_res] for sub_res in res], [
+            [item["distance"] for item in sub_res] for sub_res in res
+        ]
